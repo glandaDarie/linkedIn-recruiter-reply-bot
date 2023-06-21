@@ -1,32 +1,71 @@
-2023-06-21 10:49:59,597 ====== WebDriver manager ======
-2023-06-21 10:49:59,907 Driver [C:\Users\darie\.wdm\drivers\chromedriver\win32\114.0.5735.90\chromedriver.exe] found in cache
-2023-06-21 10:49:59,912 Started executable: `C:\Users\darie\.wdm\drivers\chromedriver\win32\114.0.5735.90\chromedriver.exe` in a child process with pid: 13052
-2023-06-21 10:50:00,426 POST http://localhost:64604/session {"capabilities": {"firstMatch": [{}], "alwaysMatch": {"browserName": "chrome", "pageLoadStrategy": "normal", "goog:chromeOptions": {"detach": true, "extensions": [], "args": []}}}}
-2023-06-21 10:50:00,426 Starting new HTTP connection (1): localhost:64604
-2023-06-21 10:50:01,190 http://localhost:64604 "POST /session HTTP/1.1" 200 860
-2023-06-21 10:50:01,191 Remote response: status=200 | data={"value":{"capabilities":{"acceptInsecureCerts":false,"browserName":"chrome","browserVersion":"114.0.5735.134","chrome":{"chromedriverVersion":"114.0.5735.90 (386bc09e8f4f2e025eddae123f36f6263096ae49-refs/branch-heads/5735@{#1052})","userDataDir":"C:\\Users\\darie\\AppData\\Local\\Temp\\scoped_dir13052_340094454"},"goog:chromeOptions":{"debuggerAddress":"localhost:64618"},"networkConnectionEnabled":false,"pageLoadStrategy":"normal","platformName":"windows","proxy":{},"setWindowRect":true,"strictFileInteractability":false,"timeouts":{"implicit":0,"pageLoad":300000,"script":30000},"unhandledPromptBehavior":"dismiss and notify","webauthn:extension:credBlob":true,"webauthn:extension:largeBlob":true,"webauthn:extension:minPinLength":true,"webauthn:extension:prf":true,"webauthn:virtualAuthenticators":true},"sessionId":"f21fa0d187e9b4ffd71e52c385110a04"}} | headers=HTTPHeaderDict({'Content-Length': '860', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
-2023-06-21 10:50:01,191 Finished Request
-2023-06-21 10:50:01,191 POST http://localhost:64604/session/f21fa0d187e9b4ffd71e52c385110a04/url {"url": "https://www.linkedin.com/checkpoint/lg/sign-in-another-account"}
-2023-06-21 10:50:01,569 http://localhost:64604 "POST /session/f21fa0d187e9b4ffd71e52c385110a04/url HTTP/1.1" 200 14
-2023-06-21 10:50:01,569 Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
-2023-06-21 10:50:01,569 Finished Request
-2023-06-21 10:50:01,569 POST http://localhost:64604/session/f21fa0d187e9b4ffd71e52c385110a04/window/maximize {}
-2023-06-21 10:50:02,174 http://localhost:64604 "POST /session/f21fa0d187e9b4ffd71e52c385110a04/window/maximize HTTP/1.1" 200 52
-2023-06-21 10:50:02,175 Remote response: status=200 | data={"value":{"height":1408,"width":2576,"x":-8,"y":-8}} | headers=HTTPHeaderDict({'Content-Length': '52', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
-2023-06-21 10:50:02,175 Finished Request
-2023-06-21 10:50:02,176 POST http://localhost:64604/session/f21fa0d187e9b4ffd71e52c385110a04/element {"using": "xpath", "value": "//input[@name = 'session_key']"}
-2023-06-21 10:50:02,363 http://localhost:64604 "POST /session/f21fa0d187e9b4ffd71e52c385110a04/element HTTP/1.1" 200 94
-2023-06-21 10:50:02,363 Remote response: status=200 | data={"value":{"element-6066-11e4-a52e-4f735466cecf":"0966840FB7654596B97FAA8D10CB3206_element_2"}} | headers=HTTPHeaderDict({'Content-Length': '94', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
-2023-06-21 10:50:02,363 Finished Request
-2023-06-21 10:50:02,364 POST http://localhost:64604/session/f21fa0d187e9b4ffd71e52c385110a04/element {"using": "xpath", "value": "//input[@name = 'session_password']"}
-2023-06-21 10:50:02,459 http://localhost:64604 "POST /session/f21fa0d187e9b4ffd71e52c385110a04/element HTTP/1.1" 200 94
-2023-06-21 10:50:02,459 Remote response: status=200 | data={"value":{"element-6066-11e4-a52e-4f735466cecf":"0966840FB7654596B97FAA8D10CB3206_element_8"}} | headers=HTTPHeaderDict({'Content-Length': '94', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
-2023-06-21 10:50:02,459 Finished Request
-2023-06-21 10:50:02,460 POST http://localhost:64604/session/f21fa0d187e9b4ffd71e52c385110a04/element/0966840FB7654596B97FAA8D10CB3206_element_2/value {"text": "darieglanda@outlook.com", "value": ["d", "a", "r", "i", "e", "g", "l", "a", "n", "d", "a", "@", "o", "u", "t", "l", "o", "o", "k", ".", "c", "o", "m"], "id": "0966840FB7654596B97FAA8D10CB3206_element_2"}
-2023-06-21 10:50:02,520 http://localhost:64604 "POST /session/f21fa0d187e9b4ffd71e52c385110a04/element/0966840FB7654596B97FAA8D10CB3206_element_2/value HTTP/1.1" 200 14
-2023-06-21 10:50:02,520 Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
-2023-06-21 10:50:02,520 Finished Request
-2023-06-21 10:50:02,521 POST http://localhost:64604/session/f21fa0d187e9b4ffd71e52c385110a04/element/0966840FB7654596B97FAA8D10CB3206_element_8/value {"text": "Arsenal2020", "value": ["A", "r", "s", "e", "n", "a", "l", "2", "0", "2", "0"], "id": "0966840FB7654596B97FAA8D10CB3206_element_8"}
-2023-06-21 10:50:02,559 http://localhost:64604 "POST /session/f21fa0d187e9b4ffd71e52c385110a04/element/0966840FB7654596B97FAA8D10CB3206_element_8/value HTTP/1.1" 200 14
-2023-06-21 10:50:02,559 Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
-2023-06-21 10:50:02,559 Finished Request
+2023-06-21 20:51:53,440 ====== WebDriver manager ======
+2023-06-21 20:51:53,744 Driver [C:\Users\darie\.wdm\drivers\chromedriver\win32\114.0.5735.90\chromedriver.exe] found in cache
+2023-06-21 20:51:53,748 Started executable: `C:\Users\darie\.wdm\drivers\chromedriver\win32\114.0.5735.90\chromedriver.exe` in a child process with pid: 35240
+2023-06-21 20:51:54,255 POST http://localhost:65323/session {"capabilities": {"firstMatch": [{}], "alwaysMatch": {"browserName": "chrome", "pageLoadStrategy": "normal", "goog:chromeOptions": {"detach": true, "extensions": [], "args": []}}}}
+2023-06-21 20:51:54,256 Starting new HTTP connection (1): localhost:65323
+2023-06-21 20:51:54,988 http://localhost:65323 "POST /session HTTP/1.1" 200 860
+2023-06-21 20:51:54,988 Remote response: status=200 | data={"value":{"capabilities":{"acceptInsecureCerts":false,"browserName":"chrome","browserVersion":"114.0.5735.134","chrome":{"chromedriverVersion":"114.0.5735.90 (386bc09e8f4f2e025eddae123f36f6263096ae49-refs/branch-heads/5735@{#1052})","userDataDir":"C:\\Users\\darie\\AppData\\Local\\Temp\\scoped_dir35240_328420732"},"goog:chromeOptions":{"debuggerAddress":"localhost:65330"},"networkConnectionEnabled":false,"pageLoadStrategy":"normal","platformName":"windows","proxy":{},"setWindowRect":true,"strictFileInteractability":false,"timeouts":{"implicit":0,"pageLoad":300000,"script":30000},"unhandledPromptBehavior":"dismiss and notify","webauthn:extension:credBlob":true,"webauthn:extension:largeBlob":true,"webauthn:extension:minPinLength":true,"webauthn:extension:prf":true,"webauthn:virtualAuthenticators":true},"sessionId":"722610382e905aa2b24166f5ab9da791"}} | headers=HTTPHeaderDict({'Content-Length': '860', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+2023-06-21 20:51:54,988 Finished Request
+2023-06-21 20:51:54,988 POST http://localhost:65323/session/722610382e905aa2b24166f5ab9da791/url {"url": "https://www.linkedin.com/checkpoint/lg/sign-in-another-account"}
+2023-06-21 20:51:55,621 http://localhost:65323 "POST /session/722610382e905aa2b24166f5ab9da791/url HTTP/1.1" 200 14
+2023-06-21 20:51:55,621 Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+2023-06-21 20:51:55,621 Finished Request
+2023-06-21 20:51:55,621 POST http://localhost:65323/session/722610382e905aa2b24166f5ab9da791/window/maximize {}
+2023-06-21 20:51:56,188 http://localhost:65323 "POST /session/722610382e905aa2b24166f5ab9da791/window/maximize HTTP/1.1" 200 52
+2023-06-21 20:51:56,188 Remote response: status=200 | data={"value":{"height":1408,"width":2576,"x":-8,"y":-8}} | headers=HTTPHeaderDict({'Content-Length': '52', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+2023-06-21 20:51:56,188 Finished Request
+2023-06-21 20:51:56,190 POST http://localhost:65323/session/722610382e905aa2b24166f5ab9da791/element {"using": "xpath", "value": "//input[@name = 'session_key']"}
+2023-06-21 20:51:56,363 http://localhost:65323 "POST /session/722610382e905aa2b24166f5ab9da791/element HTTP/1.1" 200 94
+2023-06-21 20:51:56,363 Remote response: status=200 | data={"value":{"element-6066-11e4-a52e-4f735466cecf":"13AFD402C09517230C79CFE01EB6C369_element_1"}} | headers=HTTPHeaderDict({'Content-Length': '94', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+2023-06-21 20:51:56,363 Finished Request
+2023-06-21 20:51:56,363 POST http://localhost:65323/session/722610382e905aa2b24166f5ab9da791/element {"using": "xpath", "value": "//input[@name = 'session_password']"}
+2023-06-21 20:51:56,409 http://localhost:65323 "POST /session/722610382e905aa2b24166f5ab9da791/element HTTP/1.1" 200 95
+2023-06-21 20:51:56,409 Remote response: status=200 | data={"value":{"element-6066-11e4-a52e-4f735466cecf":"13AFD402C09517230C79CFE01EB6C369_element_13"}} | headers=HTTPHeaderDict({'Content-Length': '95', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+2023-06-21 20:51:56,410 Finished Request
+2023-06-21 20:51:56,410 POST http://localhost:65323/session/722610382e905aa2b24166f5ab9da791/element/13AFD402C09517230C79CFE01EB6C369_element_1/value {"text": "darieglanda@outlook.com", "value": ["d", "a", "r", "i", "e", "g", "l", "a", "n", "d", "a", "@", "o", "u", "t", "l", "o", "o", "k", ".", "c", "o", "m"], "id": "13AFD402C09517230C79CFE01EB6C369_element_1"}
+2023-06-21 20:51:56,516 http://localhost:65323 "POST /session/722610382e905aa2b24166f5ab9da791/element/13AFD402C09517230C79CFE01EB6C369_element_1/value HTTP/1.1" 200 14
+2023-06-21 20:51:56,516 Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+2023-06-21 20:51:56,516 Finished Request
+2023-06-21 20:51:56,516 POST http://localhost:65323/session/722610382e905aa2b24166f5ab9da791/element/13AFD402C09517230C79CFE01EB6C369_element_13/value {"text": "Arsenal2020", "value": ["A", "r", "s", "e", "n", "a", "l", "2", "0", "2", "0"], "id": "13AFD402C09517230C79CFE01EB6C369_element_13"}
+2023-06-21 20:51:56,556 http://localhost:65323 "POST /session/722610382e905aa2b24166f5ab9da791/element/13AFD402C09517230C79CFE01EB6C369_element_13/value HTTP/1.1" 200 14
+2023-06-21 20:51:56,556 Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+2023-06-21 20:51:56,556 Finished Request
+2023-06-21 20:51:56,556 POST http://localhost:65323/session/722610382e905aa2b24166f5ab9da791/element {"using": "xpath", "value": "//button[@type = 'submit']"}
+2023-06-21 20:51:56,563 http://localhost:65323 "POST /session/722610382e905aa2b24166f5ab9da791/element HTTP/1.1" 200 95
+2023-06-21 20:51:56,563 Remote response: status=200 | data={"value":{"element-6066-11e4-a52e-4f735466cecf":"13AFD402C09517230C79CFE01EB6C369_element_17"}} | headers=HTTPHeaderDict({'Content-Length': '95', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+2023-06-21 20:51:56,563 Finished Request
+2023-06-21 20:51:56,563 POST http://localhost:65323/session/722610382e905aa2b24166f5ab9da791/element/13AFD402C09517230C79CFE01EB6C369_element_17/click {"id": "13AFD402C09517230C79CFE01EB6C369_element_17"}
+2023-06-21 20:51:57,682 http://localhost:65323 "POST /session/722610382e905aa2b24166f5ab9da791/element/13AFD402C09517230C79CFE01EB6C369_element_17/click HTTP/1.1" 200 14
+2023-06-21 20:51:57,682 Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+2023-06-21 20:51:57,682 Finished Request
+2023-06-21 20:51:57,682 POST http://localhost:65323/session/722610382e905aa2b24166f5ab9da791/element {"using": "xpath", "value": "//*[@id='global-nav']/div/nav/ul/li[4]/a"}
+2023-06-21 20:51:57,691 http://localhost:65323 "POST /session/722610382e905aa2b24166f5ab9da791/element HTTP/1.1" 404 961
+2023-06-21 20:51:57,691 Remote response: status=404 | data={"value":{"error":"no such element","message":"no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//*[@id='global-nav']/div/nav/ul/li[4]/a\"}\n  (Session info: chrome=114.0.5735.134)","stacktrace":"Backtrace:\n\tGetHandleVerifier [0x0085A813+48355]\n\t(No symbol) [0x007EC4B1]\n\t(No symbol) [0x006F5358]\n\t(No symbol) [0x007209A5]\n\t(No symbol) [0x00720B3B]\n\t(No symbol) [0x0074E232]\n\t(No symbol) [0x0073A784]\n\t(No symbol) [0x0074C922]\n\t(No symbol) [0x0073A536]\n\t(No symbol) [0x007182DC]\n\t(No symbol) [0x007193DD]\n\tGetHandleVerifier [0x00ABAABD+2539405]\n\tGetHandleVerifier [0x00AFA78F+2800735]\n\tGetHandleVerifier [0x00AF456C+2775612]\n\tGetHandleVerifier [0x008E51E0+616112]\n\t(No symbol) [0x007F5F8C]\n\t(No symbol) [0x007F2328]\n\t(No symbol) [0x007F240B]\n\t(No symbol) [0x007E4FF7]\n\tBaseThreadInitThunk [0x75967D59+25]\n\tRtlInitializeExceptionChain [0x7798B74B+107]\n\tRtlClearBits [0x7798B6CF+191]\n"}} | headers=HTTPHeaderDict({'Content-Length': '961', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+2023-06-21 20:51:57,691 Finished Request
+2023-06-21 20:51:57,691 Error when getting the url: Message: no such element: Unable to locate element: {"method":"xpath","selector":"//*[@id='global-nav']/div/nav/ul/li[4]/a"}
+  (Session info: chrome=114.0.5735.134); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#no-such-element-exception
+Stacktrace:
+Backtrace:
+	GetHandleVerifier [0x0085A813+48355]
+	(No symbol) [0x007EC4B1]
+	(No symbol) [0x006F5358]
+	(No symbol) [0x007209A5]
+	(No symbol) [0x00720B3B]
+	(No symbol) [0x0074E232]
+	(No symbol) [0x0073A784]
+	(No symbol) [0x0074C922]
+	(No symbol) [0x0073A536]
+	(No symbol) [0x007182DC]
+	(No symbol) [0x007193DD]
+	GetHandleVerifier [0x00ABAABD+2539405]
+	GetHandleVerifier [0x00AFA78F+2800735]
+	GetHandleVerifier [0x00AF456C+2775612]
+	GetHandleVerifier [0x008E51E0+616112]
+	(No symbol) [0x007F5F8C]
+	(No symbol) [0x007F2328]
+	(No symbol) [0x007F240B]
+	(No symbol) [0x007E4FF7]
+	BaseThreadInitThunk [0x75967D59+25]
+	RtlInitializeExceptionChain [0x7798B74B+107]
+	RtlClearBits [0x7798B6CF+191]
+
