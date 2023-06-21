@@ -1,0 +1,32 @@
+2023-06-21 10:49:59,597 ====== WebDriver manager ======
+2023-06-21 10:49:59,907 Driver [C:\Users\darie\.wdm\drivers\chromedriver\win32\114.0.5735.90\chromedriver.exe] found in cache
+2023-06-21 10:49:59,912 Started executable: `C:\Users\darie\.wdm\drivers\chromedriver\win32\114.0.5735.90\chromedriver.exe` in a child process with pid: 13052
+2023-06-21 10:50:00,426 POST http://localhost:64604/session {"capabilities": {"firstMatch": [{}], "alwaysMatch": {"browserName": "chrome", "pageLoadStrategy": "normal", "goog:chromeOptions": {"detach": true, "extensions": [], "args": []}}}}
+2023-06-21 10:50:00,426 Starting new HTTP connection (1): localhost:64604
+2023-06-21 10:50:01,190 http://localhost:64604 "POST /session HTTP/1.1" 200 860
+2023-06-21 10:50:01,191 Remote response: status=200 | data={"value":{"capabilities":{"acceptInsecureCerts":false,"browserName":"chrome","browserVersion":"114.0.5735.134","chrome":{"chromedriverVersion":"114.0.5735.90 (386bc09e8f4f2e025eddae123f36f6263096ae49-refs/branch-heads/5735@{#1052})","userDataDir":"C:\\Users\\darie\\AppData\\Local\\Temp\\scoped_dir13052_340094454"},"goog:chromeOptions":{"debuggerAddress":"localhost:64618"},"networkConnectionEnabled":false,"pageLoadStrategy":"normal","platformName":"windows","proxy":{},"setWindowRect":true,"strictFileInteractability":false,"timeouts":{"implicit":0,"pageLoad":300000,"script":30000},"unhandledPromptBehavior":"dismiss and notify","webauthn:extension:credBlob":true,"webauthn:extension:largeBlob":true,"webauthn:extension:minPinLength":true,"webauthn:extension:prf":true,"webauthn:virtualAuthenticators":true},"sessionId":"f21fa0d187e9b4ffd71e52c385110a04"}} | headers=HTTPHeaderDict({'Content-Length': '860', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+2023-06-21 10:50:01,191 Finished Request
+2023-06-21 10:50:01,191 POST http://localhost:64604/session/f21fa0d187e9b4ffd71e52c385110a04/url {"url": "https://www.linkedin.com/checkpoint/lg/sign-in-another-account"}
+2023-06-21 10:50:01,569 http://localhost:64604 "POST /session/f21fa0d187e9b4ffd71e52c385110a04/url HTTP/1.1" 200 14
+2023-06-21 10:50:01,569 Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+2023-06-21 10:50:01,569 Finished Request
+2023-06-21 10:50:01,569 POST http://localhost:64604/session/f21fa0d187e9b4ffd71e52c385110a04/window/maximize {}
+2023-06-21 10:50:02,174 http://localhost:64604 "POST /session/f21fa0d187e9b4ffd71e52c385110a04/window/maximize HTTP/1.1" 200 52
+2023-06-21 10:50:02,175 Remote response: status=200 | data={"value":{"height":1408,"width":2576,"x":-8,"y":-8}} | headers=HTTPHeaderDict({'Content-Length': '52', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+2023-06-21 10:50:02,175 Finished Request
+2023-06-21 10:50:02,176 POST http://localhost:64604/session/f21fa0d187e9b4ffd71e52c385110a04/element {"using": "xpath", "value": "//input[@name = 'session_key']"}
+2023-06-21 10:50:02,363 http://localhost:64604 "POST /session/f21fa0d187e9b4ffd71e52c385110a04/element HTTP/1.1" 200 94
+2023-06-21 10:50:02,363 Remote response: status=200 | data={"value":{"element-6066-11e4-a52e-4f735466cecf":"0966840FB7654596B97FAA8D10CB3206_element_2"}} | headers=HTTPHeaderDict({'Content-Length': '94', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+2023-06-21 10:50:02,363 Finished Request
+2023-06-21 10:50:02,364 POST http://localhost:64604/session/f21fa0d187e9b4ffd71e52c385110a04/element {"using": "xpath", "value": "//input[@name = 'session_password']"}
+2023-06-21 10:50:02,459 http://localhost:64604 "POST /session/f21fa0d187e9b4ffd71e52c385110a04/element HTTP/1.1" 200 94
+2023-06-21 10:50:02,459 Remote response: status=200 | data={"value":{"element-6066-11e4-a52e-4f735466cecf":"0966840FB7654596B97FAA8D10CB3206_element_8"}} | headers=HTTPHeaderDict({'Content-Length': '94', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+2023-06-21 10:50:02,459 Finished Request
+2023-06-21 10:50:02,460 POST http://localhost:64604/session/f21fa0d187e9b4ffd71e52c385110a04/element/0966840FB7654596B97FAA8D10CB3206_element_2/value {"text": "darieglanda@outlook.com", "value": ["d", "a", "r", "i", "e", "g", "l", "a", "n", "d", "a", "@", "o", "u", "t", "l", "o", "o", "k", ".", "c", "o", "m"], "id": "0966840FB7654596B97FAA8D10CB3206_element_2"}
+2023-06-21 10:50:02,520 http://localhost:64604 "POST /session/f21fa0d187e9b4ffd71e52c385110a04/element/0966840FB7654596B97FAA8D10CB3206_element_2/value HTTP/1.1" 200 14
+2023-06-21 10:50:02,520 Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+2023-06-21 10:50:02,520 Finished Request
+2023-06-21 10:50:02,521 POST http://localhost:64604/session/f21fa0d187e9b4ffd71e52c385110a04/element/0966840FB7654596B97FAA8D10CB3206_element_8/value {"text": "Arsenal2020", "value": ["A", "r", "s", "e", "n", "a", "l", "2", "0", "2", "0"], "id": "0966840FB7654596B97FAA8D10CB3206_element_8"}
+2023-06-21 10:50:02,559 http://localhost:64604 "POST /session/f21fa0d187e9b4ffd71e52c385110a04/element/0966840FB7654596B97FAA8D10CB3206_element_8/value HTTP/1.1" 200 14
+2023-06-21 10:50:02,559 Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+2023-06-21 10:50:02,559 Finished Request

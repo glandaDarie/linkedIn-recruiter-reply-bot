@@ -3,7 +3,7 @@ from Crypto.Util.Padding import pad, unpad
 from Crypto.Random import get_random_bytes
 from base64 import b64encode, b64decode
 
-def generate_key(length: int = 16) -> bytes:
+def generate_key(length: int = 16) -> str:
     """
     Generates a random key of the specified length.
 
@@ -11,24 +11,25 @@ def generate_key(length: int = 16) -> bytes:
         length (int): The length of the key in bytes. Default is 16 bytes.
 
     Returns:
-        bytes: The randomly generated key.
+        str: The randomly generated key as a hex string.
     """
-    return get_random_bytes(length)
+    return get_random_bytes(length).hex()
     
-def encrypt_aes(input : str, key : str) -> str:
+def encrypt_aes(message : str, key : str) -> str:
     """
-    Encrypts the input string using AES encryption in CBC mode with PKCS7 padding.
+    Encrypts the message string using AES encryption in CBC mode with PKCS7 padding.
 
     Args:
         key (str): The encryption key as a string.
-        input (str): The input string to be encrypted.
+        message (str): The message string to be encrypted.
 
     Returns:
         str: The encrypted message as a Base64-encoded string.
     """
+    message : bytes = bytes(message, encoding="utf-8")
     key : bytes = bytes.fromhex(key)
     cipher : AES = AES.new(key, AES.MODE_CBC)
-    ciphertext : bytes = cipher.encrypt(pad(input, AES.block_size))
+    ciphertext : bytes = cipher.encrypt(pad(message, AES.block_size))
     iv_and_ciphertext : bytes = cipher.iv + ciphertext
     encrypted_data : bytes = b64encode(iv_and_ciphertext).decode("utf-8")
     return encrypted_data
@@ -51,6 +52,4 @@ def decrypt_aes(encrypted_message : str, key : str) -> bytes:
     cipher : AES = AES.new(key, AES.MODE_CBC, iv)
     decrypted_data : bytes = unpad(cipher.decrypt(ciphertext), AES.block_size)
     return decrypted_data
-
-
 
