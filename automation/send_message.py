@@ -29,7 +29,8 @@ if __name__ == "__main__":
     if url_messages is None:
         sys.exit(1)
     driver.get(url_messages)
-    top_k_messages_recieved : List[str] = message_controller.fetch_last_k_messages_from_message_queue()
-    print(f"Message recieved: {top_k_messages_recieved}")
+    print(f"Messages: {message_controller.fetch_all_messages()}")
+    # top_k_messages_recieved : List[str] = message_controller.fetch_last_k_messages_from_message_queue()
+    # print(f"Message recieved: {top_k_messages_recieved}")
 
     
