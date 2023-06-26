@@ -4,7 +4,6 @@ from utils.paths_utils import messages_xpath, head_message, messages_div
 from selenium import webdriver
 from selenium.webdriver.common.by import By 
 from utils.logger_utils import logger
-import numpy as np
 
 class Message_controller:
     def __init__(self, driver : webdriver):
@@ -23,14 +22,23 @@ class Message_controller:
         sleep(2)
         message_history : List[str] = []
         try:
-            div_messages : Callable = self.driver.find_element(By.XPATH, messages_div)
+            div_messages : object = self.driver.find_element(By.XPATH, messages_div)
             messages_li : List[object] = div_messages.find_elements(By.TAG_NAME, "li") 
-            indices : List[int] = list(range(1, len(messages_li)+1))
-            print(f"indices: {indices}")
-            messages_li : List[object] = [indices for message_li in messages_li if \
-                                          message_li.get_attribute("class").strip() == "msg-s-message-list__event clearfix"]
-            print(f"Number of messages (message history): {len(messages_li)}")
-
+            indices_messages : List[int] = list(range(1, len(messages_li) + 1))
+            indices_messages_li : List[object] = [
+                    indices_messages[index] for index, message_li in enumerate(messages_li) if \
+                    message_li.get_attribute("class").strip() == "msg-s-message-list__event clearfix"
+            ]
+            for index in indices_messages_li:
+                _messages_div =  f"{messages_div}/li[{index}]".strip()
+                div_messages : object = self.driver.find_element(By.XPATH, _messages_div)
+                time = div_messages.find_elements(By.TAG_NAME, "msg-s-message-list__time-heading t-12 t-black--light t-bold")
+                for t in time:
+                    print(f"div_messages: {t.text}")
+                # messages_li : List[object] = div_messages.get_attribute("innerHTML")
+                # print(f"messages_li values: {messages_li}")
+                break
+            print(f"indices for messages: {indices_messages_li}")
         except Exception as e:
             logger.error(f"Error when the text from the p tag: {e}")
             return None
@@ -42,7 +50,6 @@ class Message_controller:
         try:
             for index in list(range(23-k, 23)):
                 message_xpath : str = f"{head_message[:37]}{index}{head_message[37:]}" 
-                print(f"message_xpath: {message_xpath}")
                 message_element : Callable = self.driver.find_element(By.XPATH, message_xpath)
                 message_elements.append(message_element.text)
         except Exception as e:
