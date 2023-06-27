@@ -4,6 +4,7 @@ from utils.paths_utils import messages_xpath, head_message, messages_div
 from selenium import webdriver
 from selenium.webdriver.common.by import By 
 from utils.logger_utils import logger
+import re
 
 class Message_controller:
     def __init__(self, driver : webdriver):
@@ -29,16 +30,17 @@ class Message_controller:
                     indices_messages[index] for index, message_li in enumerate(messages_li) if \
                     message_li.get_attribute("class").strip() == "msg-s-message-list__event clearfix"
             ]
-            for index in indices_messages_li:
-                _messages_div =  f"{messages_div}/li[{index}]".strip()
+            convo_indices : List[List[int]] = []
+            for index_message in indices_messages_li:
+                _messages_div =  f"{messages_div}/li[{index_message}]".strip()
                 div_messages : object = self.driver.find_element(By.XPATH, _messages_div)
-                time = div_messages.find_elements(By.TAG_NAME, "msg-s-message-list__time-heading t-12 t-black--light t-bold")
-                for t in time:
-                    print(f"div_messages: {t.text}")
-                # messages_li : List[object] = div_messages.get_attribute("innerHTML")
-                # print(f"messages_li values: {messages_li}")
-                break
-            print(f"indices for messages: {indices_messages_li}")
+                tags : List[object] = div_messages.find_elements(By.XPATH, "./*")
+                convo_index : int = [
+                        index for index, t in enumerate(tags) 
+                              if re.search(r"msg-s-event-listitem\s{4,}", t.get_attribute("class"))
+                ][0]
+                convo_indices.append(convo_index)
+            print(f"Convo indicies: {convo_indices}")
         except Exception as e:
             logger.error(f"Error when the text from the p tag: {e}")
             return None
