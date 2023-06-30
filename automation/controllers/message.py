@@ -1,50 +1,56 @@
 from time import sleep
-from typing import List, Callable
+from typing import List, Tuple
 from utils.paths_utils import messages_xpath, head_message, messages_div
 from selenium import webdriver
 from selenium.webdriver.common.by import By 
 from utils.logger_utils import logger
-import re
 
 class Message_controller:
     def __init__(self, driver : webdriver):
-        self.driver = driver
+        self.driver : webdriver = driver
 
     def get_messages_url(self) -> str|None:
         try:
-            messages_element : Callable = self.driver.find_element(By.XPATH, messages_xpath)
+            messages_element : object = self.driver.find_element(By.XPATH, messages_xpath)
             messages_href : str = messages_element.get_attribute("href")
         except Exception as e:
             logger.error(f"Error when getting the url: {e}")
             return None
         return messages_href
     
-    def fetch_all_messages(self) -> List[str]:
+    def fetch_all_chat_history(self, pixels_batch : int = 400) -> List[str]:
         sleep(2)
-        message_history : List[str] = []
+        chat_history: List[List[str, str]] = []
         try:
-            div_messages : object = self.driver.find_element(By.XPATH, messages_div)
-            messages_li : List[object] = div_messages.find_elements(By.TAG_NAME, "li") 
-            indices_messages : List[int] = list(range(1, len(messages_li) + 1))
-            indices_messages_li : List[object] = [
-                    indices_messages[index] for index, message_li in enumerate(messages_li) if \
-                    message_li.get_attribute("class").strip() == "msg-s-message-list__event clearfix"
-            ]
-            convo_indices : List[List[int]] = []
-            for index_message in indices_messages_li:
-                _messages_div =  f"{messages_div}/li[{index_message}]".strip()
-                div_messages : object = self.driver.find_element(By.XPATH, _messages_div)
-                tags : List[object] = div_messages.find_elements(By.XPATH, "./*")
-                convo_index : int = [
-                        index for index, t in enumerate(tags) 
-                              if re.search(r"msg-s-event-listitem\s{4,}", t.get_attribute("class"))
-                ][0]
-                convo_indices.append(convo_index)
-            print(f"Convo indicies: {convo_indices}")
+            div_messages: object = self.driver.find_element(By.XPATH, messages_div)
+            messages_li: List[object] = div_messages.find_elements(By.TAG_NAME, "li")    
+            scrollable_div: object = self.driver.find_element(By.XPATH, "//*[@id='message-list-ember8']")
+            snapshot_pixel_batch : int = pixels_batch
+            prev_location_table_height, current_location_table_height = 1, 0
+            while prev_location_table_height != current_location_table_height:
+                prev_location_table_height : int = self.driver.execute_script("return arguments[0].scrollTop", scrollable_div)
+                self.driver.execute_script(f"arguments[0].scrollTop -= {snapshot_pixel_batch}", scrollable_div)
+                snapshot_pixel_batch += pixels_batch
+                sleep(3)
+                current_location_table_height : int = self.driver.execute_script("return arguments[0].scrollTop", scrollable_div)
+            sleep(3) 
+            for message_li in messages_li:
+                class_name : str = message_li.get_attribute("class").strip()
+                if class_name == "msg-s-message-list__event clearfix":
+                    name, message = self.get_senders_name_and_message(message_li)
+                    chat_history.append(message_li.text)                    
+                    # tags: List[object] = message_li.find_elements(By.XPATH, "./*")
+                    # for index, tag in enumerate(tags):
+                    #     print(f"{index}) Information: {tag.text}")
         except Exception as e:
-            logger.error(f"Error when the text from the p tag: {e}")
+            logger.error(f"Error when fetching messages: {e}")
             return None
-        return message_history
+        return chat_history
+    
+    def get_senders_name_and_message(self, message_li) -> Tuple[str, str]:
+        for index, message_data in enumerate(message_li):
+            print(f"{index}) Text: {message_data.text}")
+        return "sender_name", "sender_message" # dummy
 
     def fetch_last_k_messages_from_message_queue(self, k : int = 3) -> List[str]|None:
         sleep(2) 
@@ -52,7 +58,7 @@ class Message_controller:
         try:
             for index in list(range(23-k, 23)):
                 message_xpath : str = f"{head_message[:37]}{index}{head_message[37:]}" 
-                message_element : Callable = self.driver.find_element(By.XPATH, message_xpath)
+                message_element : object = self.driver.find_element(By.XPATH, message_xpath)
                 message_elements.append(message_element.text)
         except Exception as e:
             logger.error(f"Error when the text from the p tag: {e}")
