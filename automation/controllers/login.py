@@ -9,6 +9,12 @@ class Login_controller:
         self.driver : webdriver = driver
     
     def find_credential_xpaths(self) -> List[object]|None:
+        """
+        Find the XPath of the username and password fields.
+
+        Returns:
+            List[object]|None: A list containing the username and password field elements, or None if an error occurs.
+        """
         try:
             username_field : str = self.driver.find_element(By.XPATH, username_xpath)
             password_field : str = self.driver.find_element(By.XPATH, password_xpath) 
@@ -18,6 +24,17 @@ class Login_controller:
         return None
     
     def update_input_fields(self, paths : List[object], linkedin_username : str, linkedin_password : str) -> None:
+        """
+        Update the input fields with the provided LinkedIn username and password.
+
+        Args:
+            paths (List[object]): A list containing the username and password field elements.
+            linkedin_username (str): The LinkedIn username to be entered.
+            linkedin_password (str): The LinkedIn password to be entered.
+        
+        Returns:
+            Nothing
+        """
         username_element : object = None
         password_element : object = None
         try:
@@ -29,6 +46,12 @@ class Login_controller:
         return None
 
     def login_to_linkedin(self) -> None:
+        """
+        Click on the login button to log in to LinkedIn.
+
+        Returns:
+            Nothing
+        """
         try:
             self.driver.find_element(By.XPATH, login_xpath).click()
         except Exception as e:

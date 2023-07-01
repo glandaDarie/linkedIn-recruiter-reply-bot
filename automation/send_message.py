@@ -4,7 +4,8 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service   
 from webdriver_manager.chrome import ChromeDriverManager
 from utils.option_utils import options, linkedin_url
-from utils.file_utils import read_credentials, encrypted_credentials, encrypt_credentials, write_encrypted_credentials
+from utils.file_utils import read_credentials, encrypted_credentials, \
+    encrypt_credentials, write_encrypted_credentials
 from utils.paths_utils import linkedin_credentials_path
 from utils.crypto_utils import decrypt_aes
 from controllers.login import Login_controller
@@ -30,13 +31,12 @@ if __name__ == "__main__":
     sleep(5)
     if capcha_controller.capcha_appeard():
         capcha_controller.manual_completion()
+    sleep(5)
     message_controller : Message_controller = Message_controller(driver=driver) 
     url_messages : str|None = message_controller.get_messages_url()
     if url_messages is None:
         sys.exit(1)
     driver.get(url_messages)
     print(f"Messages: {message_controller.fetch_all_chat_history()}")
-    # top_k_messages_recieved : List[str] = message_controller.fetch_last_k_messages_from_chat_queue()
-    # print(f"Message recieved: {top_k_messages_recieved}")
 
     
