@@ -59,9 +59,7 @@ class Message_controller:
                     if not isinstance(result, tuple):
                         logger.error(f"Error when fetching data: {result}")
                     sender_name, sender_message = result
-                    print(f"Sender_name: {sender_name}")
-                    print(f"Sender_message: {sender_message}")
-                    chat_history.append(message_li.text)    
+                    chat_history.append([sender_name, sender_message])    
         except Exception as e:
             logger.error(f"Error when fetching messages: {e}")
             return None
@@ -84,7 +82,7 @@ class Message_controller:
             match : Match[str] | None = re.search(sender_name_pattern, tags[-1].text)
             if match:
                 sender_name = match.group(1)
-            sender_message : str = re.split("PM|AM", (tags[-1].text))[-1]
+            sender_message : str = re.split("PM|AM", (tags[-1].text))[-1].strip()
         except Exception as e:            
             logger.error(f"Error when fetching the chat history: {e}")
             return e

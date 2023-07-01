@@ -38,5 +38,3 @@ if __name__ == "__main__":
         sys.exit(1)
     driver.get(url_messages)
     print(f"Messages: {message_controller.fetch_all_chat_history()}")
-
-    
