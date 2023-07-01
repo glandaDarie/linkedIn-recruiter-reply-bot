@@ -39,18 +39,16 @@ class Message_controller:
                 if class_name == "msg-s-message-list__event clearfix":
                     name, message = self.get_senders_name_and_message(message_li)
                     chat_history.append(message_li.text)                    
-                    # tags: List[object] = message_li.find_elements(By.XPATH, "./*")
-                    # for index, tag in enumerate(tags):
-                    #     print(f"{index}) Information: {tag.text}")
         except Exception as e:
             logger.error(f"Error when fetching messages: {e}")
             return None
         return chat_history
     
-    def get_senders_name_and_message(self, message_li) -> Tuple[str, str]:
-        for index, message_data in enumerate(message_li):
-            print(f"{index}) Text: {message_data.text}")
-        return "sender_name", "sender_message" # dummy
+    def get_senders_name_and_message(self, message_li : object) -> Tuple[str, str]:
+        tags : List[object] = message_li.find_elements(By.XPATH, "./*")
+        for index, tag in enumerate(tags):
+            print(f"{index}) Information: {tag.text}")
+        return "sender_name", "sender_message" 
 
     def fetch_last_k_messages_from_message_queue(self, k : int = 3) -> List[str]|None:
         sleep(2) 
