@@ -1,4 +1,3 @@
-from time import sleep
 from typing import List, Tuple, Match
 from utils.paths_utils import messages_xpath, head_message, \
     messages_xpath, messages_list_xpath, scrollable_xpath
@@ -7,6 +6,7 @@ from selenium.webdriver.common.by import By
 from utils.logger_utils import logger
 from utils.regex_utils import sender_name_pattern
 import re
+from time import sleep
 
 class Message_controller:
     def __init__(self, driver : webdriver):
