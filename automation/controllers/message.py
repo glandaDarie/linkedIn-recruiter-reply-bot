@@ -59,7 +59,7 @@ class Message_controller:
             for message_li in messages_li:
                 class_name : str = message_li.get_attribute("class").strip()
                 if class_name == "msg-s-message-list__event clearfix":
-                    result : Tuple[str] | Exception = self.get_senders_name_and_message(sender_name, message_li)
+                    result : Tuple[str]|Exception = self.get_senders_name_and_message(sender_name, message_li)
                     if not isinstance(result, tuple):
                         logger.error(f"Error when fetching data: {result}")
                     sender_name, sender_message = result
@@ -85,7 +85,7 @@ class Message_controller:
         sender_message : str = None
         try:
             message_tags : List[object] = message_li.find_elements(By.XPATH, "./*")
-            match : Match[str] | None = re.search(sender_name_pattern, message_tags[-1].text)
+            match : Match[str]|None = re.search(sender_name_pattern, message_tags[-1].text)
             if match:
                 sender_name : str = match.group(1)
             sender_message : str = re.split("PM|AM", (message_tags[-1].text))[-1].strip()
