@@ -9,7 +9,7 @@ class Chat_dao:
         cluster : MongoClient = MongoClient(f"mongodb+srv://{db_credentials['username']}:{db_credentials['password']}@linkedin-bot.iac0yve.mongodb.net/?retryWrites=true&w=majority")
         mongo = cluster[db_credentials['db_name']]
         self.collection = mongo[db_credentials['db_name']]
-        self.data : Dict[str, str] = {str(index) : name_text for index, name_text in enumerate(data)}
+        self.data : Dict[str, str] = {str(index) : " - ".join(name_text) for index, name_text in enumerate(data)}
 
     def insert(self) -> None|Exception:
         try:

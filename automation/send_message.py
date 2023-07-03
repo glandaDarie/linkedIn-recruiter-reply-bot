@@ -40,10 +40,9 @@ if __name__ == "__main__":
         logger.error("Error when providing the url")
         sys.exit(1)
     driver.get(url_messages)
-    chat : List[List[str]] = message_controller.fetch_all_chat_history()
+    chat : List[List[str]] = message_controller.fetch_percentwise_chat_history()
     chat_dao : Chat_dao = Chat_dao(chat) 
     result : None|Exception = chat_dao.insert()
     if isinstance(result, Exception):
         logger.error(f"Error when trying to insert in database: {result}")
         sys.exit(1)
-    
