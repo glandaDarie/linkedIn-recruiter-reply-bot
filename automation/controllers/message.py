@@ -6,10 +6,17 @@ from selenium.webdriver.common.by import By
 from utils.logger_utils import logger
 from utils.regex_utils import sender_name_pattern
 import re
+from math import ceil
 from time import sleep
 
 class Message_controller:
     def __init__(self, driver : webdriver):
+        """
+        Initialize the Message_controller class.
+
+        Args:
+            driver (webdriver): The webdriver used for web scrapping
+        """
         self.driver : webdriver = driver
 
     def get_messages_url(self) -> str|None:
@@ -27,12 +34,12 @@ class Message_controller:
             return None
         return messages_href
     
-    def fetch_percentwise_chat_history(self, chat_percentage : int = 75, pixels_batch : int = 300) -> List[List[str]]:
+    def fetch_percentwise_chat_history(self, chat_percentage : int = 40, pixels_batch : int = 300) -> List[List[str]]:
         """
         Fetches the percent-wise chat history from the messages page.
 
         Args:
-            chat_percentage (int): The percentage of the chat history to keep (range 10-100). Default is 75% 
+            chat_percentage (int): The percentage of the chat history to keep (range 10-100). Default is 40% 
             pixels_batch (int): The number of pixels to scroll in each batch. Default is 300.
 
         Returns:
@@ -43,8 +50,7 @@ class Message_controller:
         assert chat_percentage >= 10 and chat_percentage <= 100, "Invalid chat_percentage \
             value. Must be between 10 and 100." 
         try:
-            messages_div: object = self.driver.find_element(By.XPATH, messages_list_xpath)
-            messages_li: List[object] = messages_div.find_elements(By.TAG_NAME, "li")    
+            messages_div: object = self.driver.find_element(By.XPATH, messages_list_xpath) 
             scrollable_div: object = self.driver.find_element(By.XPATH, scrollable_xpath)
             snapshot_pixel_batch : int = pixels_batch
             prev_location_table_height, current_location_table_height = 1, 0
@@ -54,6 +60,7 @@ class Message_controller:
                 snapshot_pixel_batch += pixels_batch
                 sleep(4)
                 current_location_table_height : int = self.driver.execute_script("return arguments[0].scrollTop", scrollable_div)
+            messages_li: List[object] = messages_div.find_elements(By.TAG_NAME, "li")   
             sleep(3) 
             sender_name : str|None = None
             for message_li in messages_li:
@@ -64,7 +71,7 @@ class Message_controller:
                         logger.error(f"Error when fetching data: {result}")
                     sender_name, sender_message = result
                     chat_history.append([sender_name, sender_message])
-            start_index : int = len(chat_history) - int(chat_percentage/100 * len(chat_history))
+            start_index : int = len(chat_history) - ceil(chat_percentage/100 * len(chat_history))
             chat_history : List[List[str]] = chat_history[start_index:]
         except Exception as e:
             logger.error(f"Error when fetching messages: {e}")

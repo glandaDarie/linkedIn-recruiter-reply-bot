@@ -15,14 +15,14 @@ class Capcha_controller:
         Returns:
             bool: True if the CAPTCHA verification appears, False otherwise.
         """
+        element : object|None = None
         try:
-            self.driver.find_elements(By.XPATH, capcha_verification_xpath)
+            element : object = self.driver.find_element(By.XPATH, capcha_verification_xpath)
         except Exception as e:
             logger.info(f"Capcha is not present, continue: {e}")
-            return False
-        return True
+        return element is not None and element.text == "Verification"
     
-    def manual_completion(self, message : str = "Press finish once you completed the CAPCHA.") -> bool: 
+    def manual_completion(self, message : str = "Press finish once you complete the CAPCHA.") -> bool: 
         """
         Prompt the user to manually complete the CAPTCHA.
 

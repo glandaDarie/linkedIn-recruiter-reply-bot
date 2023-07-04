@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict, Any, Optional
 import sys
 from time import sleep
 from selenium import webdriver
@@ -44,6 +44,9 @@ if __name__ == "__main__":
     chat_dao : Chat_dao = Chat_dao(chat) 
     if not chat_dao.insertion_allowed():
         logger.info("Can't insert in the db, data is present already")
+        old_data : Optional[Dict[str, Any]] = chat_dao.fetch_all()
+        response : str = chat_dao.update(old_data=old_data)
+        logger.info(response)
     else:
-        result : None|str = chat_dao.insert()
-        logger.info(result)
+        response : None|str = chat_dao.insert()
+        logger.info(response)
