@@ -10,9 +10,10 @@ class Chat_dao:
 
         Args:
             data (List[List[str]]): The chat history data.
-        """
+        """        
         db_credentials : dict = read_credentials(database_credentials_path)
-        cluster : MongoClient = MongoClient(f"mongodb+srv://{db_credentials['username']}:{db_credentials['password']}@linkedin-bot.iac0yve.mongodb.net/?retryWrites=true&w=majority")
+        uri : str = f"mongodb+srve://{db_credentials['username']}:{db_credentials['password']}@linkedin-replier-cluste.qcijzcn.mongodb.net/?retryWrites=true&w=majority"
+        cluster : MongoClient = MongoClient(uri)
         mongo = cluster[db_credentials['db_name']]
         self.collection = mongo[db_credentials['db_name']]
         self.data : Dict[str, str] = {str(index) : " - ".join(name_text) for index, name_text in enumerate(data)}
