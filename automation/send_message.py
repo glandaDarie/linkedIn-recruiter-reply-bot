@@ -14,6 +14,7 @@ from controllers.message import Message_controller
 from controllers.capcha import Capcha_controller
 from data_access_objects.chat_dao import Chat_dao
 from utils.logger_utils import logger
+from recruiter_text_replier.reply import Reply_controller
 
 if __name__ == "__main__":
     driver : webdriver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
@@ -23,8 +24,8 @@ if __name__ == "__main__":
         credentials_encrypted : dict = encrypt_credentials(linkedin_credentials_path)
         write_encrypted_credentials(linkedin_credentials_path, credentials_encrypted)
     linkedin_credentials : dict = read_credentials(linkedin_credentials_path)
-    linkedin_username : str = decrypt_aes(linkedin_credentials['username'], linkedin_credentials['key']).decode('utf-8')
-    linkedin_password : str = decrypt_aes(linkedin_credentials['password'], linkedin_credentials['key']).decode('utf-8')
+    linkedin_username : str = decrypt_aes(linkedin_credentials["username"], linkedin_credentials["key"]).decode("utf-8")
+    linkedin_password : str = decrypt_aes(linkedin_credentials["password"], linkedin_credentials["key"]).decode("utf-8")
     login_controller : Login_controller = Login_controller(driver=driver)
     credential_paths: List[object] = login_controller.find_credential_xpaths()
     login_controller.update_input_fields(paths=credential_paths, linkedin_username=linkedin_username, linkedin_password=linkedin_password)
@@ -49,4 +50,12 @@ if __name__ == "__main__":
         logger.info(response)
     else:
         response : None|str = chat_dao.insert()
-        logger.info(response)
+        logger.info(response)    
+    # dummy implementation for now
+    try: 
+        question : str = "Who won the FIFA World Cup in the year 1994?"
+        template : str = """Question: {data}
+            Answer: Let's think step by step."""
+        print(f"Output: {Reply_controller().prediction(question, template)}")
+    except Exception as e:
+        logger.error(f"Error with langchain implementation: {e}")

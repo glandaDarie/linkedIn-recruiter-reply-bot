@@ -12,7 +12,7 @@ class Chat_dao:
             data (List[List[str]]): The chat history data.
         """        
         db_credentials : dict = read_credentials(database_credentials_path)
-        uri : str = f"mongodb+srve://{db_credentials['username']}:{db_credentials['password']}@linkedin-replier-cluste.qcijzcn.mongodb.net/?retryWrites=true&w=majority"
+        uri : str = f"mongodb+srv://{db_credentials['username']}:{db_credentials['password']}@linkedin-replier-cluste.qcijzcn.mongodb.net/?retryWrites=true&w=majority"
         cluster : MongoClient = MongoClient(uri)
         mongo = cluster[db_credentials['db_name']]
         self.collection = mongo[db_credentials['db_name']]
