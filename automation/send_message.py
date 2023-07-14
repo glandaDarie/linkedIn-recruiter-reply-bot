@@ -1,5 +1,6 @@
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Match
 import sys
+from re import search
 from time import sleep
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service   
@@ -7,11 +8,12 @@ from webdriver_manager.chrome import ChromeDriverManager
 from utils.option_utils import options, linkedin_url
 from utils.file_utils import read_credentials, encrypted_credentials, \
     encrypt_credentials, write_encrypted_credentials
-from utils.paths_utils import linkedin_credentials_path
+from utils.paths_utils import linkedin_credentials_path, user_account_fullname_xpath
 from utils.crypto_utils import decrypt_aes
 from controllers.login import Login_controller
 from controllers.message import Message_controller
 from controllers.capcha import Capcha_controller
+from controllers.account_name import Account_name_controller
 from data_access_objects.chat_dao import Chat_dao
 from utils.logger_utils import logger
 from recruiter_text_replier.reply import Reply_controller
@@ -35,6 +37,10 @@ if __name__ == "__main__":
     if capcha_controller.capcha_appeard():
         capcha_controller.manual_completion()
     sleep(5)
+    account_name_controller : Account_name_controller = Account_name_controller(\
+        xpath=user_account_fullname_xpath, driver=driver)
+    account_profile_name : str = account_name_controller.build_name().name
+    print(f"Account name data: {account_profile_name}")
     message_controller : Message_controller = Message_controller(driver=driver) 
     url_messages : str|None = message_controller.get_messages_url()
     if url_messages is None:
