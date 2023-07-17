@@ -10,14 +10,16 @@ from math import ceil
 from time import sleep
 
 class Message_controller:
-    def __init__(self, driver : webdriver):
+    def __init__(self, driver : webdriver, profile_name : str):
         """
         Initialize the Message_controller class.
 
         Args:
             driver (webdriver): The webdriver used for web scrapping
+            profile_name (str): The users profile name for distinction between him and the recruiter
         """
         self.driver : webdriver = driver
+        self.profile_name : str = profile_name
 
     def get_messages_url(self) -> str|None:
         """
@@ -34,7 +36,7 @@ class Message_controller:
             return None
         return messages_href
     
-    def fetch_percentwise_chat_history(self, chat_percentage : int = 40, pixels_batch : int = 300) -> List[List[str]]:
+    def fetch_percentwise_chat_history(self, chat_percentage : int = 20, pixels_batch : int = 300) -> List[List[str]]:
         """
         Fetches the percent-wise chat history from the messages page.
 
@@ -70,6 +72,8 @@ class Message_controller:
                     if not isinstance(result, tuple):
                         logger.error(f"Error when fetching data: {result}")
                     sender_name, sender_message = result
+                    if sender_name == self.profile_name:
+                        sender_name = f"{sender_name} (me)"
                     chat_history.append([sender_name, sender_message])
             start_index : int = len(chat_history) - ceil(chat_percentage/100 * len(chat_history))
             chat_history : List[List[str]] = chat_history[start_index:]

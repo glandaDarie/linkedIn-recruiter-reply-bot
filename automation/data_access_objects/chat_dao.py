@@ -1,7 +1,7 @@
 from typing import List, Dict, Any, Optional
 from pymongo import MongoClient
 from utils.paths_utils import database_credentials_path
-from utils.file_utils import read_credentials
+from utils.file_utils import read_content
 
 class Chat_dao:
     def __init__(self, data : List[List[str]]):
@@ -10,8 +10,8 @@ class Chat_dao:
 
         Args:
             data (List[List[str]]): The chat history data.
-        """        
-        db_credentials : dict = read_credentials(database_credentials_path)
+        """  
+        db_credentials : dict = read_content(database_credentials_path)
         uri : str = f"mongodb+srv://{db_credentials['username']}:{db_credentials['password']}@linkedin-replier-cluste.qcijzcn.mongodb.net/?retryWrites=true&w=majority"
         cluster : MongoClient = MongoClient(uri)
         mongo = cluster[db_credentials['db_name']]

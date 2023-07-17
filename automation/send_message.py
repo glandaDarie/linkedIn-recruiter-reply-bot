@@ -1,12 +1,11 @@
-from typing import List, Dict, Any, Optional, Match
+from typing import List, Dict, Any, Optional
 import sys
-from re import search
 from time import sleep
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service   
 from webdriver_manager.chrome import ChromeDriverManager
 from utils.option_utils import options, linkedin_url
-from utils.file_utils import read_credentials, encrypted_credentials, \
+from utils.file_utils import read_content, encrypted_credentials, \
     encrypt_credentials, write_encrypted_credentials
 from utils.paths_utils import linkedin_credentials_path, user_account_fullname_xpath
 from utils.crypto_utils import decrypt_aes
@@ -16,7 +15,8 @@ from controllers.capcha import Capcha_controller
 from controllers.account_name import Account_name_controller
 from data_access_objects.chat_dao import Chat_dao
 from utils.logger_utils import logger
-from recruiter_text_replier.reply import Reply_controller
+from utils.job_information_utils import job_interest, reply_policy
+from recruiter_text_replier.llm_reply import LLM_Reply_controller
 
 if __name__ == "__main__":
     driver : webdriver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
@@ -25,23 +25,26 @@ if __name__ == "__main__":
     if not encrypted_credentials(linkedin_credentials_path):
         credentials_encrypted : dict = encrypt_credentials(linkedin_credentials_path)
         write_encrypted_credentials(linkedin_credentials_path, credentials_encrypted)
-    linkedin_credentials : dict = read_credentials(linkedin_credentials_path)
+    linkedin_credentials : dict = read_content(linkedin_credentials_path)
     linkedin_username : str = decrypt_aes(linkedin_credentials["username"], linkedin_credentials["key"]).decode("utf-8")
     linkedin_password : str = decrypt_aes(linkedin_credentials["password"], linkedin_credentials["key"]).decode("utf-8")
     login_controller : Login_controller = Login_controller(driver=driver)
     credential_paths: List[object] = login_controller.find_credential_xpaths()
-    login_controller.update_input_fields(paths=credential_paths, linkedin_username=linkedin_username, linkedin_password=linkedin_password)
+    login_controller.update_input_fields(paths=credential_paths, 
+                                         linkedin_username=linkedin_username, 
+                                         linkedin_password=linkedin_password)
     login_controller.login_to_linkedin() 
-    capcha_controller : Capcha_controller = Capcha_controller(driver)
-    sleep(5)
+    capcha_controller : Capcha_controller = Capcha_controller(driver=driver)
     if capcha_controller.capcha_appeard():
         capcha_controller.manual_completion()
     sleep(5)
-    account_name_controller : Account_name_controller = Account_name_controller(\
-        xpath=user_account_fullname_xpath, driver=driver)
+    account_name_controller : Account_name_controller = Account_name_controller(
+        xpath=user_account_fullname_xpath, 
+        driver=driver
+    )
     account_profile_name : str = account_name_controller.build_name().name
-    print(f"Account name data: {account_profile_name}")
-    message_controller : Message_controller = Message_controller(driver=driver) 
+    message_controller : Message_controller = Message_controller(driver=driver,
+                                                                 profile_name=account_profile_name) 
     url_messages : str|None = message_controller.get_messages_url()
     if url_messages is None:
         logger.error("Error when providing the url")
@@ -53,15 +56,18 @@ if __name__ == "__main__":
         logger.info("Can't insert in the db, data is present already")
         old_data : Optional[Dict[str, Any]] = chat_dao.fetch_all()
         response : str = chat_dao.update(old_data=old_data)
-        logger.info(response)
     else:
         response : None|str = chat_dao.insert()
-        logger.info(response)    
-    # dummy implementation for now
+    logger.info(response)    
+    chat : str = "\n".join([f"{sentence[0]} : {sentence[1]}" for sentence in chat])
     try: 
-        question : str = "Who won the FIFA World Cup in the year 1994?"
-        template : str = """Question: {data}
-            Answer: Let's think step by step."""
-        print(f"Output: {Reply_controller().prediction(question, template)}")
+        question : str = f"{job_interest}\n\n{reply_policy}\n\n{chat}"
+        template : str = """Question: {data}"""
+        llm_response : str = LLM_Reply_controller().prediction_hugging_face(
+                                      data=question,
+                                      template=template, 
+                                      kwargs={"temperature": 0.1, "max_length": 2000}
+        )
+        print(f"llm_response: {llm_response}")
     except Exception as e:
         logger.error(f"Error with langchain implementation: {e}")

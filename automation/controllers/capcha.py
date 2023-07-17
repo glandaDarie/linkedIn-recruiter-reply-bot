@@ -3,6 +3,8 @@ from selenium.webdriver.common.by import By
 from utils.paths_utils import capcha_verification_xpath
 from utils.logger_utils import logger
 import easygui
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 class Capcha_controller:
     def __init__(self, driver: webdriver):
@@ -17,6 +19,8 @@ class Capcha_controller:
         """
         element : object|None = None
         try:
+            iframe_element : object = self.driver.find_element(By.XPATH, capcha_verification_xpath)
+            self.driver.switch_to.frame(iframe_element)
             element : object = self.driver.find_element(By.XPATH, capcha_verification_xpath)
         except Exception as e:
             logger.info(f"Capcha is not present, continue: {e}")

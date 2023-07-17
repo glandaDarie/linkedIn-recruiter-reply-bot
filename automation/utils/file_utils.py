@@ -2,15 +2,15 @@ import json
 from utils.crypto_utils import encrypt_aes, generate_key
 from utils.logger_utils import logger
 
-def read_credentials(path : str) -> dict:
+def read_content(path : str) -> dict:
     """
-    Reads credentials from a JSON file.
+    Reads content from a JSON file.
 
     Args:
         path (str): The path to the JSON file.
 
     Returns:
-        dict: A dictionary containing the credentials.
+        dict: A dictionary containing the jsons content.
     """
     with open(path, "r") as input_file:
         data : dict = json.load(input_file)
@@ -28,7 +28,7 @@ def encrypt_credentials(path : str) -> dict|None:
                       or None if an error occurs.
     """
     try:
-        dict_credentials : dict = read_credentials(path)
+        dict_credentials : dict = read_content(path)
         if not isinstance(dict_credentials, dict):
             logger.error("Invalid credentials format. Expected a dictionary.")
             return None
@@ -51,7 +51,7 @@ def encrypted_credentials(path : str) -> bool:
         bool: True if encrypted credentials exist, False otherwise.
     """
     try:
-        dict_credentials : dict = read_credentials(path)
+        dict_credentials : dict = read_content(path)
     except Exception as e:
         logger.error(f"Error when trying to read the credentials: {e}")
     if dict_credentials["key"] == "":

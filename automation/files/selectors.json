@@ -1,0 +1,21 @@
+{
+    "css": {
+      "fullname_css": ".t-16.t-black.t-bold"
+    },
+    "xpath": {
+        "username_xpath" : "//input[@name = 'session_key']",
+        "password_xpath" : "//input[@name = 'session_password']",
+        "login_xpath" : "//button[@type = 'submit']",
+        "messages_xpath" : "//*[@id='global-nav']/div/nav/ul/li[4]/a",
+        "head_message" : "//*[@id='message-list-ember8']/ul/li[]/div/div/div/div/p",
+        "messages_list_xpath" : "//*[@id='message-list-ember8']/ul",
+        "scrollable_xpath" : "//*[@id='message-list-ember8']",
+        "capcha_verification_xpath" : "//*[@id='home_children_heading']",
+        "user_account_fullname_xpath" : "//*[@id='ember18']"
+    },
+    "tag": {
+        "list_item_tag": "li"
+    }
+}
+
+

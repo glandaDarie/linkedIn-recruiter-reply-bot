@@ -1,6 +1,6 @@
 import logging
 
-logging.basicConfig(filename="error_handling.log", 
+logging.basicConfig(filename="logger.log", 
                     format='%(asctime)s %(message)s',
                     level=logging.DEBUG,
                     filemode='w')
