@@ -38,13 +38,15 @@ class Recruiter_messaging_controller(Chat_dao):
     
     def has_similar_content_with_db_collection(self) -> bool:
         try:
-         old_chat_history : Optional[Dict[str, Any]] = self.fetch_all()
+            old_chat_history : Optional[Dict[str, Any]] = self.fetch_all()            
+            str_old_chat_history : str = "\n".join(old_chat_history.values())
+            str_new_chat_history : str = "\n".join([f"{sentence[0]} - {sentence[1]}" for sentence in self.new_chat_history])
+            if str_old_chat_history == str_new_chat_history:
+                return True
         except Exception as e:
             logger.info(f"Error when trying to fetch the data from the mongo cluster: {e}")
-            return False
-        # TO DO -> compare the old chat history with the new one
-        return True
+        return False
 
     def add_head_message_from_messaging_inbox(self, message_li : object) -> Deque:
-        return self.recruiter_message_lis.appendleft(message_li)
+        return self.recruiter_message_lis.append(message_li)
         

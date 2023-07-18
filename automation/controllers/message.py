@@ -107,7 +107,6 @@ class Message_controller:
             return e
         return sender_name, sender_message
 
-
     def fetch_last_k_messages_from_chat_history(self, k : int = 3) -> List[str]|None:
         """
         Fetch the last k messages from the chat history.
