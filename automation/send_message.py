@@ -19,7 +19,6 @@ from utils.logger_utils import logger
 from utils.job_information_utils import job_interest, reply_policy
 from recruiter_text_replier.llm_reply import LLM_Reply_controller
 
-
 if __name__ == "__main__":
     driver : webdriver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
     driver.get(linkedin_url)
@@ -56,9 +55,9 @@ if __name__ == "__main__":
     chat : List[List[str]] = message_controller.fetch_percentwise_chat_history()
     sleep(6)
     recruiter_messaging_controller : Recruiter_messaging_controller = \
-        Recruiter_messaging_controller(driver=driver, chat_history=chat)
+        Recruiter_messaging_controller(driver=driver, new_chat_history=chat)
     recruiter_messages_objects : List[object] = recruiter_messaging_controller.fetch_new_messages()
-    if not recruiter_messaging_controller.has_similar_content_with_db_cluster():
+    if not recruiter_messaging_controller.has_similar_content_with_db_collection():
         recruiter_messaging_controller.add_head_message_from_messaging_inbox()
     for message_li in list(recruiter_messaging_controller.recruiter_message_lis):
         message_li.click()
@@ -66,7 +65,9 @@ if __name__ == "__main__":
     if not chat_dao.insertion_allowed():
         logger.info("Can't insert in the db, data is present already")
         old_data : Optional[Dict[str, Any]] = chat_dao.fetch_all()
-        response : str = chat_dao.update(old_data=old_data)
+        response : str = chat_dao.delete_all_the_content()
+        logger.info(response)    
+        response : str = chat_dao.insert()
     else:
         response : None|str = chat_dao.insert()
     logger.info(response)    
@@ -74,7 +75,6 @@ if __name__ == "__main__":
     try: 
         question : str = f"{job_interest}\n\n{reply_policy}\n\n \
             This is the chat history:\n{chat}\n\n Reply to to the recuiter given the past messages"
-        
         template : str = """Question: {data}"""
         llm_response : str = LLM_Reply_controller().prediction_hugging_face(
                                       data=question,

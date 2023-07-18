@@ -3,7 +3,7 @@ import os
 current_directory : str = os.getcwd()
 linkedin_credentials_path : str = os.path.join(current_directory, "files", "linkedin_credentials.json")
 database_credentials_path : str = os.path.join(current_directory, "files", "database_credentials.json")
-hugging_face_api_token_path : str = os.path.join(current_directory, "files", "hugging_face_api_tokens.json")
+llm_api_token_path : str = os.path.join(current_directory, "files", "llm_api_tokens.json")
 selectors_path : str = os.path.join(current_directory, "files", "selectors.json")
 
 username_xpath : str = "//input[@name = 'session_key']"

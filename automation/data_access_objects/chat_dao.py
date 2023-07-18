@@ -88,5 +88,18 @@ class Chat_dao:
             raise e
         return "Updated successfully the chat history in the database"
 
-    def delete(self):
-        pass
+    def delete_all_the_content(self) -> str:
+        """
+        Delete all the content from the collection.
+
+        Returns:
+            str: Message indicating the successful deletion.
+
+        Raises:
+            Exception: If an error occurs during the deletion.
+        """
+        try:
+            self.collection.delete_many({})
+        except Exception as e:
+            raise e
+        return "Deleted successfully all the chat history from the database"

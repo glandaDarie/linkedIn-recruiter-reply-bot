@@ -8,9 +8,10 @@ from data_access_objects.chat_dao import Chat_dao
 from collections import deque
 
 class Recruiter_messaging_controller(Chat_dao):
-    def __init__(self, driver : webdriver, chat_history : List[List[str]]):
-        super().__init__(chat_history)
+    def __init__(self, driver : webdriver, new_chat_history : List[List[str]]):
+        super().__init__(new_chat_history)
         self.driver : webdriver = driver
+        self.new_chat_history : List[List[str]] = new_chat_history
         self.selectors : dict =  read_content(selectors_path)
         self.recruiter_message_lis : Deque = deque()
         self.first_message_li : object = None
@@ -35,9 +36,13 @@ class Recruiter_messaging_controller(Chat_dao):
                 logger.info(f"{index}: has no element: {e}")
         return self.recruiter_message_lis
     
-    def has_similar_content_with_db_cluster(self, new_data) -> bool:
-        old_data : Optional[Dict[str, Any]] = self.fetch_all()
-        print(old_data)
+    def has_similar_content_with_db_collection(self) -> bool:
+        try:
+         old_chat_history : Optional[Dict[str, Any]] = self.fetch_all()
+        except Exception as e:
+            logger.info(f"Error when trying to fetch the data from the mongo cluster: {e}")
+            return False
+        # TO DO -> compare the old chat history with the new one
         return True
 
     def add_head_message_from_messaging_inbox(self, message_li : object) -> Deque:
