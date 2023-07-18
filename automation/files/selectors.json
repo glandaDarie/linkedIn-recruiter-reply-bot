@@ -11,11 +11,12 @@
         "messages_list_xpath" : "//*[@id='message-list-ember8']/ul",
         "scrollable_xpath" : "//*[@id='message-list-ember8']",
         "capcha_verification_xpath" : "//*[@id='home_children_heading']",
-        "user_account_fullname_xpath" : "//*[@id='ember18']"
+        "user_account_fullname_xpath" : "//*[@id='ember18']",
+        "recruiter_messaging_xpath" : "//*[@id='main']/div/div[1]/div[2]/ul"
     },
     "tag": {
-        "list_item_tag": "li"
+        "list_item_tag": "li",
+        "h3_tag": "h3"
     }
 }
-
 

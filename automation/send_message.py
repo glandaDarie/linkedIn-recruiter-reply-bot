@@ -13,10 +13,12 @@ from controllers.login import Login_controller
 from controllers.message import Message_controller
 from controllers.capcha import Capcha_controller
 from controllers.account_name import Account_name_controller
+from controllers.recruiter_messaging import Recruiter_messaging_controller
 from data_access_objects.chat_dao import Chat_dao
 from utils.logger_utils import logger
 from utils.job_information_utils import job_interest, reply_policy
 from recruiter_text_replier.llm_reply import LLM_Reply_controller
+
 
 if __name__ == "__main__":
     driver : webdriver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
@@ -43,6 +45,7 @@ if __name__ == "__main__":
         driver=driver
     )
     account_profile_name : str = account_name_controller.build_name().name
+    sleep(4)
     message_controller : Message_controller = Message_controller(driver=driver,
                                                                  profile_name=account_profile_name) 
     url_messages : str|None = message_controller.get_messages_url()
@@ -51,6 +54,14 @@ if __name__ == "__main__":
         sys.exit(1)
     driver.get(url_messages)
     chat : List[List[str]] = message_controller.fetch_percentwise_chat_history()
+    sleep(6)
+    recruiter_messaging_controller : Recruiter_messaging_controller = \
+        Recruiter_messaging_controller(driver=driver, chat_history=chat)
+    recruiter_messages_objects : List[object] = recruiter_messaging_controller.fetch_new_messages()
+    if not recruiter_messaging_controller.has_similar_content_with_db_cluster():
+        recruiter_messaging_controller.add_head_message_from_messaging_inbox()
+    for message_li in list(recruiter_messaging_controller.recruiter_message_lis):
+        message_li.click()
     chat_dao : Chat_dao = Chat_dao(chat) 
     if not chat_dao.insertion_allowed():
         logger.info("Can't insert in the db, data is present already")
@@ -61,7 +72,9 @@ if __name__ == "__main__":
     logger.info(response)    
     chat : str = "\n".join([f"{sentence[0]} : {sentence[1]}" for sentence in chat])
     try: 
-        question : str = f"{job_interest}\n\n{reply_policy}\n\n{chat}"
+        question : str = f"{job_interest}\n\n{reply_policy}\n\n \
+            This is the chat history:\n{chat}\n\n Reply to to the recuiter given the past messages"
+        
         template : str = """Question: {data}"""
         llm_response : str = LLM_Reply_controller().prediction_hugging_face(
                                       data=question,

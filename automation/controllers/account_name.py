@@ -14,11 +14,11 @@ class Account_name_controller:
         self.xpath : str = xpath
         self.driver : webdriver = driver
         self.name : str|None = None
-        self.selectors_css : dict = read_content(selectors_path)["css"]
+        self.selectors : dict = read_content(selectors_path)["css"]
 
     def build_name(self) -> Self:
         fullname_div : object = WebDriverWait(self.driver, 10).until(
-            EC.visibility_of_element_located((By.CSS_SELECTOR, self.selectors_css["fullname_css"]))
+            EC.visibility_of_element_located((By.CSS_SELECTOR, self.selectors["fullname_css"]))
         )
         data : str = fullname_div.text
         self.name : str = self.extract_name_from_data(data)
