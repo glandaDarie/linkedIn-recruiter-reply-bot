@@ -9,6 +9,13 @@ from collections import deque
 
 class Recruiter_messaging_controller(Chat_dao):
     def __init__(self, driver : webdriver, new_chat_history : List[List[str]]):
+        """
+        Initialize the Recruiter_messaging_controller class.
+
+        Args:
+            driver (webdriver): The Selenium webdriver instance.
+            new_chat_history (List[List[str]]): The new chat history data.
+        """
         super().__init__(new_chat_history)
         self.driver : webdriver = driver
         self.new_chat_history : List[List[str]] = new_chat_history
@@ -17,6 +24,12 @@ class Recruiter_messaging_controller(Chat_dao):
         self.first_message_li : object = None
     
     def fetch_new_messages(self) -> List[object]|None:
+        """
+        Fetches the new messages from the messaging inbox.
+
+        Returns:
+            List[object] | None: A list of message elements if messages are found, None otherwise.
+        """
         messages_ul : object = self.driver.find_element(
                                                         By.XPATH, 
                                                         self.selectors["xpath"]["recruiter_messaging_xpath"])
@@ -37,6 +50,12 @@ class Recruiter_messaging_controller(Chat_dao):
         return self.recruiter_message_lis
     
     def has_similar_content_with_db_collection(self) -> bool:
+        """
+        Checks if the new chat history content is similar to the existing chat history in the database.
+
+        Returns:
+            bool: True if the content is similar, False otherwise.
+        """
         try:
             old_chat_history : Optional[Dict[str, Any]] = self.fetch_all()            
             str_old_chat_history : str = "\n".join(old_chat_history.values())
@@ -48,5 +67,14 @@ class Recruiter_messaging_controller(Chat_dao):
         return False
 
     def add_head_message_from_messaging_inbox(self, message_li : object) -> Deque:
+        """
+        Adds a message list item to the tail of the recruiter_message_lis deque.
+
+        Args:
+            message_li (object): The message list item to add.
+
+        Returns:
+            Deque: The updated recruiter_message_lis deque.
+        """
         return self.recruiter_message_lis.append(message_li)
         

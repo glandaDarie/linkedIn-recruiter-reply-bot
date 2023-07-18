@@ -11,12 +11,25 @@ from utils.paths_utils import selectors_path
 
 class Account_name_controller:
     def __init__(self, xpath : str, driver : webdriver):
+        """
+        Initialize the Account_name_controller class.
+
+        Args:
+            xpath (str): The XPath selector for the element containing the account name.
+            driver (webdriver): The Selenium webdriver instance.
+        """
         self.xpath : str = xpath
         self.driver : webdriver = driver
         self.name : str|None = None
         self.selectors : dict = read_content(selectors_path)["css"]
 
     def build_name(self) -> Self:
+        """
+        Build the account name by extracting it from the webpage.
+
+        Returns:
+            Self: The updated Account_name_controller instance.
+        """
         fullname_div : object = WebDriverWait(self.driver, 10).until(
             EC.visibility_of_element_located((By.CSS_SELECTOR, self.selectors["fullname_css"]))
         )
@@ -28,6 +41,15 @@ class Account_name_controller:
         return self
     
     def extract_name_from_data(self, data : str) -> str|None:
+        """
+        Extract the account name from the given data.
+
+        Args:
+            data (str): The data containing the account name.
+
+        Returns:
+            str | None: The extracted account name if found, None otherwise.
+        """
         match : Match = search(pattern_name, data, MULTILINE)
         if not match:
             return None
