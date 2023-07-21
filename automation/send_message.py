@@ -17,7 +17,7 @@ from controllers.recruiter_messaging import Recruiter_messaging_controller
 from data_access_objects.chat_dao import Chat_dao
 from utils.logger_utils import logger
 from utils.job_information_utils import job_interest, reply_policy
-from recruiter_text_replier.llm_reply import LLM_Reply_controller
+from recruiter_text_replier.llm_reply_factory import LLM_Reply_factory
 
 if __name__ == "__main__":
     driver : webdriver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
@@ -76,11 +76,20 @@ if __name__ == "__main__":
         question : str = f"{job_interest}\n\n{reply_policy}\n\n \
             This is the chat history:\n{chat}\n\n Reply to to the recuiter given the past messages"
         template : str = """Question: {data}"""
-        llm_response : str = LLM_Reply_controller().prediction_hugging_face(
-                                      data=question,
-                                      template=template, 
-                                      kwargs={"temperature": 0.1, "max_length": 2000}
-        )
-        print(f"llm_response: {llm_response}")
+        llm_Reply_factory : LLM_Reply_factory = LLM_Reply_factory(llm_name="<open_ai>")
+        llm : object | NotImplementedError = llm_Reply_factory.create_llm()
+        
+        # llm_reply_controller : LLM_Reply_controller = LLM_Reply_controller()
+        # llm_response_hugging_face : str = llm_reply_controller.prediction_hugging_face(
+        #                                             data=question,
+        #                                             template=template,
+        #                                             kwargs={"temperature" : 0.1, "max_length": 2000}
+        # )
+        # llm_response : str = LLM_Reply_controller().prediction_hugging_face(
+        #                               data=question,
+        #                               template=template, 
+        #                               kwargs={"temperature": 0.1, "max_length": 2000}
+        # )
+        # print(f"llm_response: {llm_response}")
     except Exception as e:
         logger.error(f"Error with langchain implementation: {e}")
