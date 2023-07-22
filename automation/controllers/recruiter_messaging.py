@@ -22,6 +22,7 @@ class Recruiter_messaging_controller(Chat_dao):
         self.selectors : dict =  read_content(selectors_path)
         self.recruiter_message_lis : Deque = deque()
         self.first_message_li : object = None
+        self.second_message_li : object = None
     
     def fetch_new_messages(self) -> List[object]|None:
         """
@@ -36,7 +37,7 @@ class Recruiter_messaging_controller(Chat_dao):
         message_elements : List[object] = messages_ul.find_elements(
                                                                     By.TAG_NAME, 
                                                                     self.selectors["tag"]["list_item_tag"])
-        self.first_message_li : object = message_elements[0]
+        self.first_message_li : object = message_elements[1]
         for index, message_element in enumerate(message_elements):
             try:
                 class_name : str = message_element.find_element(
@@ -66,15 +67,11 @@ class Recruiter_messaging_controller(Chat_dao):
             logger.info(f"Error when trying to fetch the data from the mongo cluster: {e}")
         return False
 
-    def add_head_message_from_messaging_inbox(self, message_li : object) -> Deque:
+    def add_head_message_from_messaging_inbox(self) -> Deque:
         """
-        Adds a message list item to the tail of the recruiter_message_lis deque.
-
-        Args:
-            message_li (object): The message list item to add.
+        Adds the first message from message list item to the head of the recruiter_message_lis deque.
 
         Returns:
             Deque: The updated recruiter_message_lis deque.
         """
-        return self.recruiter_message_lis.append(message_li)
-        
+        self.recruiter_message_lis.appendleft(self.first_message_li)

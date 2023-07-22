@@ -18,8 +18,6 @@ from data_access_objects.chat_dao import Chat_dao
 from utils.logger_utils import logger
 from utils.job_information_utils import job_interest, reply_policy
 from recruiter_text_replier.llm_reply_factory import LLM_Reply_factory
-from recruiter_text_replier.hugging_face import Hugging_face
-from recruiter_text_replier.openai import OpenAI
 
 if __name__ == "__main__":
     driver : webdriver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
@@ -58,50 +56,44 @@ if __name__ == "__main__":
     if chat is None:
         print("Chat is empty, can't fetch data")
         sys.exit(1)
-    print(f"chat: {chat}")
-    sys.exit(1) # temporary break point
     sleep(6)
     recruiter_messaging_controller : Recruiter_messaging_controller = \
         Recruiter_messaging_controller(driver=driver, new_chat_history=chat)
     recruiter_messages_objects : List[object] = recruiter_messaging_controller.fetch_new_messages()
     if not recruiter_messaging_controller.has_similar_content_with_db_collection():
         recruiter_messaging_controller.add_head_message_from_messaging_inbox()
-    for message_li in list(recruiter_messaging_controller.recruiter_message_lis):
-        message_li.click()
-    chat_dao : Chat_dao = Chat_dao(chat) 
-    if not chat_dao.insertion_allowed():
-        logger.info("Can't insert in the db, data is present already")
-        old_data : Optional[Dict[str, Any]] = chat_dao.fetch_all()
-        response : str = chat_dao.delete_all_the_content()
+    chats : List[List[List[str]]] = []    
+    for index, message_li in enumerate(list(recruiter_messaging_controller.recruiter_message_lis)):
+        if index != 0:
+            message_li.click()
+        sleep(6)
+        chat : List[List[str]] = message_controller.fetch_percentwise_chat_history()
+        if chat is None:
+            print("Chat is empty, can't fetch data")
+            sys.exit(1)
+        chats.append(chat)
+        chat_dao : Chat_dao = Chat_dao(chat) 
+        if not chat_dao.insertion_allowed():
+            logger.info("Can't insert in the db, data is present already")
+            old_data : Optional[Dict[str, Any]] = chat_dao.fetch_all()
+            response : str = chat_dao.delete_all_the_content()
+            logger.info(response)    
+            response : str = chat_dao.insert()
+        else:
+            response : None | str = chat_dao.insert()
         logger.info(response)    
-        response : str = chat_dao.insert()
-    else:
-        response : None|str = chat_dao.insert()
-    logger.info(response)    
-    chat : str = "\n".join([f"{sentence[0]} : {sentence[1]}" for sentence in chat])
-    try: 
-        question : str = f"{job_interest}\n\n{reply_policy}\n\n \
-            This is the chat history:\n{chat}\n\n Reply to to the recuiter given the past messages"
-        template : str = """Question: {data}"""
-        llm_reply_factory : LLM_Reply_factory = LLM_Reply_factory(llm_name="<hugging_face>")
-        llm : object | NotImplementedError = llm_reply_factory.create_llm()
-        response : str = llm.predict(
-            data=question,
-            template=template,
-            kwargs={"temperature" : 0.1, "max_length": 2000}
-        )
-        print(f"Response: {response}")
-        # llm_reply_controller : LLM_Reply_controller = LLM_Reply_controller()
-        # llm_response_hugging_face : str = llm_reply_controller.prediction_hugging_face(
-        #                                             data=question,
-        #                                             template=template,
-        #                                             kwargs={"temperature" : 0.1, "max_length": 2000}
-        # )
-        # llm_response : str = LLM_Reply_controller().prediction_hugging_face(
-        #                               data=question,
-        #                               template=template, 
-        #                               kwargs={"temperature": 0.1, "max_length": 2000}
-        # )
-        # print(f"llm_response: {llm_response}")
-    except Exception as e:
-        logger.error(f"Error with langchain implementation: {e}")
+        chat : str = "\n".join([f"{sentence[0]} : {sentence[1]}" for sentence in chat])
+        try: 
+            question : str = f"{job_interest}\n\n{reply_policy}\n\n \
+                This is the chat history:\n{chat}\n\n Reply to to the recuiter given the past messages"
+            template : str = """Question: {data}"""
+            llm_reply_factory : LLM_Reply_factory = LLM_Reply_factory(llm_name="<hugging_face>")
+            llm : object | NotImplementedError = llm_reply_factory.create_llm()
+            response : str = llm.predict(
+                data=question,
+                template=template,
+                kwargs={"temperature" : 0.1, "max_length": 2000}
+            )
+            print(f"Response: {response}")
+        except Exception as e:
+            logger.error(f"Error with langchain implementation: {e}")
