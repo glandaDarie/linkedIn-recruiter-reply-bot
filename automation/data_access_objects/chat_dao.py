@@ -16,6 +16,7 @@ class Chat_dao:
         cluster : MongoClient = MongoClient(uri)
         mongo = cluster[db_credentials['db_name']]
         self.collection = mongo[db_credentials['db_name']]
+        print(f"Data is: {data}")
         self.data : Dict[str, str] = {str(index) : " - ".join(name_text) for index, name_text in enumerate(data)}
 
     def insert(self) -> str:

@@ -65,13 +65,15 @@ class Message_controller:
             messages_li: List[object] = messages_div.find_elements(By.TAG_NAME, "li")   
             sleep(3) 
             sender_name : str|None = None
+            last_index : int = [index for index, message_li in enumerate(messages_li) if 
+                message_li.get_attribute("class").strip() == "msg-s-message-list__event clearfix"][-1]
             for index, message_li in enumerate(messages_li):
                 class_name : str = message_li.get_attribute("class").strip()
                 if class_name == "msg-s-message-list__event clearfix":
-                    result : Tuple[str] | Exception = self.get_senders_name_and_message(sender_name, message_li, index)
-                    if not isinstance(result, tuple):
-                        logger.error(f"Error when fetching data: {result}")
-                    sender_name, sender_message = result
+                    response : Tuple[str] | Exception = self.get_senders_name_and_message(sender_name, message_li, index, last_index)
+                    if not isinstance(response, tuple):
+                        logger.error(f"Error when fetching data: {response}")
+                    sender_name, sender_message = response
                     if sender_name == self.profile_name:
                         sender_name = f"{sender_name} (me)"
                     chat_history.append([sender_name, sender_message])
@@ -82,32 +84,31 @@ class Message_controller:
             return None
         return chat_history
 
-    def get_senders_name_and_message(self, sender_name: str | None, message_li: object, index: int) -> Tuple[str] | Exception:
+    def get_senders_name_and_message(self, sender_name : str|None, message_li : object, start : int, end : int) -> Tuple[str] | Exception:
         """
         Helper method to extract the sender's name and message from a message list item.
-
+        
         Args:
-            sender_name (str | None): The name of the message sender.
+            sender_name (str|None): sender_name is used to keep the name of the message sender
             message_li (object): The message list item element.
-            index (int): The index of the current element position.
-
+            start (int) & end (int): Used for fetching the first message (down to up) 
+            
         Returns:
             Tuple[str] | Exception: A tuple containing the sender's name and message, or an Exception if an error occurs.
         """
+        sender_message : str = None
         try:
-            message_tags: List[object] = message_li.find_elements(By.XPATH, "./*")
-            sender_message: str = re.split("PM|AM", message_tags[-1 if index == 0 else -2].text)[-1].strip()
-            if index == 0:
-                match: Match[str] | None = re.search(sender_name_pattern, message_tags[-1].text)
-            else:
-                match: Match[str] | None = re.search(sender_name_pattern, message_tags[-2].text)
-            sender_name: str = match.group(1) if match else None
-        except Exception as e:
+            message_tags : List[object] = message_li.find_elements(By.XPATH, "./*")
+            match : Match[str]|None = re.search(sender_name_pattern, message_tags[-1].text)
+            if match:
+                sender_name : str = match.group(1)
+            sender_message : str = re.split("PM|AM", (message_tags[-1 if start < end else -2].text))[-1].strip()
+        except Exception as e:            
             logger.error(f"Error when fetching the chat history: {e}")
             return e
         return sender_name, sender_message
 
-    def fetch_last_k_messages_from_chat_history(self, k : int = 3) -> List[str]|None:
+    def fetch_last_k_messages_from_chat_history(self, k : int = 3)-> List[str]|None:
         """
         Fetch the last k messages from the chat history.
 

@@ -18,6 +18,8 @@ from data_access_objects.chat_dao import Chat_dao
 from utils.logger_utils import logger
 from utils.job_information_utils import job_interest, reply_policy
 from recruiter_text_replier.llm_reply_factory import LLM_Reply_factory
+from recruiter_text_replier.hugging_face import Hugging_face
+from recruiter_text_replier.openai import OpenAI
 
 if __name__ == "__main__":
     driver : webdriver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
@@ -47,12 +49,17 @@ if __name__ == "__main__":
     sleep(4)
     message_controller : Message_controller = Message_controller(driver=driver,
                                                                  profile_name=account_profile_name) 
-    url_messages : str|None = message_controller.get_messages_url()
+    url_messages : str | None = message_controller.get_messages_url()
     if url_messages is None:
-        logger.error("Error when providing the url")
+        print("Error when providing the url")
         sys.exit(1)
     driver.get(url_messages)
     chat : List[List[str]] = message_controller.fetch_percentwise_chat_history()
+    if chat is None:
+        print("Chat is empty, can't fetch data")
+        sys.exit(1)
+    print(f"chat: {chat}")
+    sys.exit(1) # temporary break point
     sleep(6)
     recruiter_messaging_controller : Recruiter_messaging_controller = \
         Recruiter_messaging_controller(driver=driver, new_chat_history=chat)
@@ -76,9 +83,14 @@ if __name__ == "__main__":
         question : str = f"{job_interest}\n\n{reply_policy}\n\n \
             This is the chat history:\n{chat}\n\n Reply to to the recuiter given the past messages"
         template : str = """Question: {data}"""
-        llm_Reply_factory : LLM_Reply_factory = LLM_Reply_factory(llm_name="<open_ai>")
-        llm : object | NotImplementedError = llm_Reply_factory.create_llm()
-        
+        llm_reply_factory : LLM_Reply_factory = LLM_Reply_factory(llm_name="<hugging_face>")
+        llm : object | NotImplementedError = llm_reply_factory.create_llm()
+        response : str = llm.predict(
+            data=question,
+            template=template,
+            kwargs={"temperature" : 0.1, "max_length": 2000}
+        )
+        print(f"Response: {response}")
         # llm_reply_controller : LLM_Reply_controller = LLM_Reply_controller()
         # llm_response_hugging_face : str = llm_reply_controller.prediction_hugging_face(
         #                                             data=question,

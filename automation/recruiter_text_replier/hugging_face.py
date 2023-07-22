@@ -7,7 +7,7 @@ class Hugging_face:
         self.api_token = api_token
         os.environ["LLM_API_TOKEN"] = self.api_token
     
-    def generate_response(self, data : str, template : str, repo_id : str = "google/flan-t5-xxl", **kwargs : dict) -> str:
+    def predict(self, data : str, template : str, repo_id : str = "google/flan-t5-xxl", **kwargs : dict) -> str:
         prompt : PromptTemplate = PromptTemplate(template=template, input_variables=["data"])
         llm : HuggingFaceHub = HuggingFaceHub(
             repo_id=repo_id, model_kwargs=kwargs
