@@ -16,7 +16,7 @@ class Recruiter_messaging_controller(Chat_dao):
             driver (webdriver): The Selenium webdriver instance.
             new_chat_history (List[List[str]]): The new chat history data.
         """
-        super().__init__(new_chat_history)
+        super().__init__()
         self.driver : webdriver = driver
         self.new_chat_history : List[List[str]] = new_chat_history
         self.selectors : dict =  read_content(selectors_path)

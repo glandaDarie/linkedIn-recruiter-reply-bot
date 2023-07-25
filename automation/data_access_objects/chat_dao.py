@@ -4,23 +4,22 @@ from utils.paths_utils import database_credentials_path
 from utils.file_utils import read_content
 
 class Chat_dao:
-    def __init__(self, data : List[List[str]]):
+    def __init__(self):
         """
         Initialize the Chat_dao class.
-
-        Args:
-            data (List[List[str]]): The chat history data.
         """  
         db_credentials : dict = read_content(database_credentials_path)
         uri : str = f"mongodb+srv://{db_credentials['username']}:{db_credentials['password']}@linkedin-replier-cluste.qcijzcn.mongodb.net/?retryWrites=true&w=majority"
         cluster : MongoClient = MongoClient(uri)
         mongo = cluster[db_credentials['db_name']]
         self.collection = mongo[db_credentials['db_name']]
-        self.data : Dict[str, str] = {str(index) : " - ".join(name_text) for index, name_text in enumerate(data)}
 
-    def insert(self) -> str:
+    def insert(self, data : Dict[str, str]) -> str:
         """
         Insert the chat history into the database.
+
+        Args:
+            data (Dict[str, str]): The data to be inserted in the collection.
 
         Returns:
             str: Message if successful, or an error message if an exception occurs.
@@ -29,7 +28,7 @@ class Chat_dao:
             Exception: If an error occurs during the insertion.
         """
         try:
-            self.collection.insert_one(self.data)
+            self.collection.insert_one(data)
         except Exception as e:
             raise e
         return "Inserted successfully the chat history in the database"
@@ -68,12 +67,13 @@ class Chat_dao:
             raise e
         return document is None
 
-    def update(self, old_data: Optional[Dict[str, Any]]) -> str:
+    def update(self, old_data: Optional[Dict[str, Any]], new_data : Optional[Dict[str, Any]]) -> str:
         """
         Update the chat history in the database with new data.
 
         Args:
             old_data (Optional[Dict[str, Any]]): The old chat history data to be updated.
+            new_data (Optional[Dict[str, Any]]): The new chat history data 
 
         Returns:
             str: Message indicating the successful update.
@@ -82,7 +82,7 @@ class Chat_dao:
             Exception: If an error occurs during the update.
         """
         try:
-            new_data : Dict[str, Dict[str, Any]] = {"$set": self.data}
+            new_data : Dict[str, Dict[str, Any]] = {"$set": new_data}
             self.collection.update_one(old_data, new_data)
         except Exception as e:
             raise e

@@ -8,6 +8,12 @@ from selenium.webdriver.support import expected_conditions as EC
 
 class Capcha_controller:
     def __init__(self, driver: webdriver):
+        """
+        Initialize the Capcha_controller class.
+            
+        Args:
+            driver (webdriver): The webdriver for scrapping the elements from the page"
+        """  
         self.driver : webdriver = driver
     
     def capcha_appeard(self) -> bool:
@@ -17,15 +23,21 @@ class Capcha_controller:
         Returns:
             bool: True if the CAPTCHA verification appears, False otherwise.
         """
-        element : object|None = None
+        element: object | None = None
         try:
-            iframe_element : object = self.driver.find_element(By.XPATH, capcha_verification_xpath)
-            self.driver.switch_to.frame(iframe_element)
-            element : object = self.driver.find_element(By.XPATH, capcha_verification_xpath)
+            self.driver.switch_to.frame(iframe_present)
+            iframe_present : object = WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located((By.XPATH, "//*[@id='arkose']/div/iframe"))
+            )
+            self.driver.switch_to.frame(iframe_present)
+            element: object = WebDriverWait(self.driver, 10).until(
+                EC.visibility_of_element_located((By.XPATH, capcha_verification_xpath))
+            )
         except Exception as e:
-            logger.info(f"Capcha is not present, continue: {e}")
+            logger.info(f"Captcha is not present, continue: {e}")
         return element is not None and element.text == "Verification"
-    
+
+
     def manual_completion(self, message : str = "Press finish once you complete the CAPCHA.") -> bool: 
         """
         Prompt the user to manually complete the CAPTCHA.

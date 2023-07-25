@@ -1,8 +1,10 @@
-from typing import List, Tuple, Match
+from typing import List, Tuple, Match, Dict
 from utils.paths_utils import messages_xpath, head_message, \
     messages_xpath, messages_list_xpath, scrollable_xpath
 from selenium import webdriver
 from selenium.webdriver.common.by import By 
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from utils.logger_utils import logger
 from utils.regex_utils import sender_name_pattern
 import re
@@ -36,7 +38,8 @@ class Message_controller:
             return None
         return messages_href
     
-    def fetch_percentwise_chat_history(self, chat_percentage : int = 20, pixels_batch : int = 300) -> List[List[str]]:
+
+    def fetch_percentwise_chat_history(self, chat_percentage: int = 20, pixels_batch: int = 300) -> List[List[str]]:
         """
         Fetches the percent-wise chat history from the messages page.
 
@@ -52,38 +55,42 @@ class Message_controller:
         assert chat_percentage >= 10 and chat_percentage <= 100, "Invalid chat_percentage \
             value. Must be between 10 and 100." 
         try:
-            messages_div: object = self.driver.find_element(By.XPATH, messages_list_xpath) 
-            scrollable_div: object = self.driver.find_element(By.XPATH, scrollable_xpath)
-            snapshot_pixel_batch : int = pixels_batch
+            messages_div: object = WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located((By.XPATH, messages_list_xpath))
+            )
+            scrollable_div: object = WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located((By.XPATH, scrollable_xpath))
+            )
+            snapshot_pixel_batch: int = pixels_batch
             prev_location_table_height, current_location_table_height = 1, 0
             while prev_location_table_height != current_location_table_height:
-                prev_location_table_height : int = self.driver.execute_script("return arguments[0].scrollTop", scrollable_div)
+                prev_location_table_height: int = self.driver.execute_script("return arguments[0].scrollTop", scrollable_div)
                 self.driver.execute_script(f"arguments[0].scrollTop -= {snapshot_pixel_batch}", scrollable_div)
                 snapshot_pixel_batch += pixels_batch
-                sleep(4)
-                current_location_table_height : int = self.driver.execute_script("return arguments[0].scrollTop", scrollable_div)
-            messages_li: List[object] = messages_div.find_elements(By.TAG_NAME, "li")   
-            sleep(3) 
-            sender_name : str|None = None
-            last_index : int = [index for index, message_li in enumerate(messages_li) if 
-                message_li.get_attribute("class").strip() == "msg-s-message-list__event clearfix"][-1]
-            for index, message_li in enumerate(messages_li):
-                class_name : str = message_li.get_attribute("class").strip()
-                if class_name == "msg-s-message-list__event clearfix":
-                    response : Tuple[str] | Exception = self.get_senders_name_and_message(sender_name, message_li, index, last_index)
-                    if not isinstance(response, tuple):
-                        logger.error(f"Error when fetching data: {response}")
-                    sender_name, sender_message = response
-                    if sender_name == self.profile_name:
-                        sender_name = f"{sender_name} (me)"
-                    chat_history.append([sender_name, sender_message])
-            start_index : int = len(chat_history) - ceil(chat_percentage/100 * len(chat_history))
-            chat_history : List[List[str]] = chat_history[start_index:]
+                sleep(6)
+                current_location_table_height: int = self.driver.execute_script("return arguments[0].scrollTop", scrollable_div)
+            messages_li: List[object] = messages_div.find_elements(By.TAG_NAME, "li")
+            sleep(3)
+            sender_name: str | None = None
+            messages_li: List[object] = [message_li for message_li in messages_li if
+                                         message_li.get_attribute("class").strip() == "msg-s-message-list__event clearfix"]
+            end_index_li: int = len(messages_li) - 1
+            for index_li, message_li in enumerate(messages_li):
+                response: Tuple[str] | Exception = self.get_senders_name_and_message(sender_name, message_li, index_li,
+                                                                                     end_index_li)
+                if not isinstance(response, tuple):
+                    logger.error(f"Error when fetching data: {response}")
+                sender_name, sender_message = response
+                if sender_name == self.profile_name:
+                    sender_name = f"{sender_name} (me)"
+                chat_history.append([sender_name, sender_message])
+            start_index: int = len(chat_history) - ceil(chat_percentage / 100 * len(chat_history))
+            chat_history: List[List[str]] = chat_history[start_index:]
         except Exception as e:
             logger.error(f"Error when fetching messages: {e}")
             return None
         return chat_history
-
+    
     def get_senders_name_and_message(self, sender_name : str|None, message_li : object, start : int, end : int) -> Tuple[str] | Exception:
         """
         Helper method to extract the sender's name and message from a message list item.
@@ -102,7 +109,8 @@ class Message_controller:
             match : Match[str]|None = re.search(sender_name_pattern, message_tags[-1].text)
             if match:
                 sender_name : str = match.group(1)
-            sender_message : str = re.split("PM|AM", (message_tags[-1 if start < end else -2].text))[-1].strip()
+                #  if start < end else -2
+            sender_message : str = re.split("PM|AM", (message_tags[-1].text))[-1].strip()
         except Exception as e:            
             logger.error(f"Error when fetching the chat history: {e}")
             return e
@@ -129,3 +137,15 @@ class Message_controller:
             logger.error(f"Error when the text from the p tag: {e}")
             return None
         return message_elements
+    
+    def format_chat_for_processing(self, chat : List[List[str]]) -> Dict[str, str]:
+        """
+        Formats the chat messages into a dictionary.
+
+        Args:
+            chat (List[List[str]]): A list of chat messages, each containing sender name and message.
+
+        Returns:
+            Dict[str, str]: A dictionary with numeric indices as keys and formatted chat data as values.
+        """
+        return {str(index) : " - ".join(name_text) for index, name_text in enumerate(chat)}

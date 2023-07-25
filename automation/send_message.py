@@ -53,6 +53,7 @@ if __name__ == "__main__":
         sys.exit(1)
     driver.get(url_messages)
     chat : List[List[str]] = message_controller.fetch_percentwise_chat_history()
+    chat : Dict[str, str] = message_controller.format_chat_for_processing(chat=chat)
     if chat is None:
         print("Chat is empty, can't fetch data")
         sys.exit(1)
@@ -62,25 +63,25 @@ if __name__ == "__main__":
     recruiter_messages_objects : List[object] = recruiter_messaging_controller.fetch_new_messages()
     if not recruiter_messaging_controller.has_similar_content_with_db_collection():
         recruiter_messaging_controller.add_head_message_from_messaging_inbox()
+    chat_dao : Chat_dao = Chat_dao() 
     chats : List[List[List[str]]] = []    
     for index, message_li in enumerate(list(recruiter_messaging_controller.recruiter_message_lis)):
-        if index != 0:
+        if index == 0:
+            chats.append(chat)
+        else:
             message_li.click()
-        sleep(6)
-        chat : List[List[str]] = message_controller.fetch_percentwise_chat_history()
-        if chat is None:
-            print("Chat is empty, can't fetch data")
-            sys.exit(1)
-        chats.append(chat)
-        chat_dao : Chat_dao = Chat_dao(chat) 
+            sleep(6)
+            chat : List[List[str]] = message_controller.fetch_percentwise_chat_history()
+            if chat is None:
+                print("Chat is empty, can't fetch data")
+                sys.exit(1)
+            chats.append(chat)
         if not chat_dao.insertion_allowed():
             logger.info("Can't insert in the db, data is present already")
             old_data : Optional[Dict[str, Any]] = chat_dao.fetch_all()
             response : str = chat_dao.delete_all_the_content()
             logger.info(response)    
-            response : str = chat_dao.insert()
-        else:
-            response : None | str = chat_dao.insert()
+        response : str = chat_dao.insert(chats[index])
         logger.info(response)    
         chat : str = "\n".join([f"{sentence[0]} : {sentence[1]}" for sentence in chat])
         try: 
