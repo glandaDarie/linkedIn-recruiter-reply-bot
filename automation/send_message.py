@@ -17,7 +17,6 @@ from controllers.account_name import Account_name_controller
 from controllers.recruiter_messaging import Recruiter_messaging_controller
 from data_access_objects.chat_dao import Chat_dao
 from utils.logger_utils import logger
-from utils.job_information_utils import job_interest, reply_policy
 from recruiter_text_replier.llm_reply_factory import LLM_Reply_factory
 from langchain.document_loaders import TextLoader
 from langchain.indexes import VectorstoreIndexCreator
@@ -68,10 +67,8 @@ if __name__ == "__main__":
         recruiter_messaging_controller.add_head_message_from_messaging_inbox()
     chat_dao : Chat_dao = Chat_dao() 
     chats : List[List[List[str]]] = []    
-    
     personal_data_loader : TextLoader = TextLoader(personal_data_path)
     index : VectorstoreIndexCreator = VectorstoreIndexCreator().from_loaders([personal_data_loader])
-    
     for index, message_li in enumerate(list(recruiter_messaging_controller.recruiter_message_lis)):
         if index == 0:
             chats.append(chat)
