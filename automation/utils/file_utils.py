@@ -2,6 +2,20 @@ import json
 from utils.crypto_utils import encrypt_aes, generate_key
 from utils.logger_utils import logger
 
+def read_content_from_text_file(path : str) -> str:
+    """
+    Reads content from a text file.
+    
+    Args:
+        path (str): The path to the text file.
+
+    Returns:
+        str: A string containing the text file's content.
+    """
+    with open(path, "r") as file:
+        content : str = file.read()
+    return content
+
 def read_content(path : str) -> dict:
     """
     Reads content from a JSON file.

@@ -5,8 +5,8 @@ import os
 class Hugging_face:
     def __init__(self, api_token : str):
         self.api_token = api_token
-        os.environ["LLM_API_TOKEN"] = self.api_token
-    
+        os.environ["HUGGINGFACEHUB_API_TOKEN"] = self.api_token
+
     def predict(self, data : str, template : str, repo_id : str = "google/flan-t5-xxl", **kwargs : dict) -> str:
         prompt : PromptTemplate = PromptTemplate(template=template, input_variables=["data"])
         llm : HuggingFaceHub = HuggingFaceHub(

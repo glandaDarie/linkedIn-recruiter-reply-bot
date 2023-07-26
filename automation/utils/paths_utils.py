@@ -5,6 +5,7 @@ linkedin_credentials_path : str = os.path.join(current_directory, "files", "link
 database_credentials_path : str = os.path.join(current_directory, "files", "database_credentials.json")
 llm_api_token_path : str = os.path.join(current_directory, "files", "llm_api_tokens.json")
 selectors_path : str = os.path.join(current_directory, "files", "selectors.json")
+personal_data_path : str = os.path.join(current_directory, "files", "personal_data.txt")
 
 username_xpath : str = "//input[@name = 'session_key']"
 password_xpath : str = "//input[@name = 'session_password']"

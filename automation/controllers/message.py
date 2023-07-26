@@ -39,7 +39,7 @@ class Message_controller:
         return messages_href
     
 
-    def fetch_percentwise_chat_history(self, chat_percentage: int = 20, pixels_batch: int = 300) -> List[List[str]]:
+    def fetch_percentwise_chat_history(self, chat_percentage: int = 60, pixels_batch: int = 300) -> List[List[str]]:
         """
         Fetches the percent-wise chat history from the messages page.
 
@@ -74,10 +74,8 @@ class Message_controller:
             sender_name: str | None = None
             messages_li: List[object] = [message_li for message_li in messages_li if
                                          message_li.get_attribute("class").strip() == "msg-s-message-list__event clearfix"]
-            end_index_li: int = len(messages_li) - 1
-            for index_li, message_li in enumerate(messages_li):
-                response: Tuple[str] | Exception = self.get_senders_name_and_message(sender_name, message_li, index_li,
-                                                                                     end_index_li)
+            for message_li in messages_li:
+                response: Tuple[str] | Exception = self.get_senders_name_and_message(sender_name, message_li)
                 if not isinstance(response, tuple):
                     logger.error(f"Error when fetching data: {response}")
                 sender_name, sender_message = response
@@ -91,14 +89,13 @@ class Message_controller:
             return None
         return chat_history
     
-    def get_senders_name_and_message(self, sender_name : str|None, message_li : object, start : int, end : int) -> Tuple[str] | Exception:
+    def get_senders_name_and_message(self, sender_name : str|None, message_li : object) -> Tuple[str] | Exception:
         """
         Helper method to extract the sender's name and message from a message list item.
         
         Args:
             sender_name (str|None): sender_name is used to keep the name of the message sender
             message_li (object): The message list item element.
-            start (int) & end (int): Used for fetching the first message (down to up) 
             
         Returns:
             Tuple[str] | Exception: A tuple containing the sender's name and message, or an Exception if an error occurs.
@@ -109,7 +106,6 @@ class Message_controller:
             match : Match[str]|None = re.search(sender_name_pattern, message_tags[-1].text)
             if match:
                 sender_name : str = match.group(1)
-                #  if start < end else -2
             sender_message : str = re.split("PM|AM", (message_tags[-1].text))[-1].strip()
         except Exception as e:            
             logger.error(f"Error when fetching the chat history: {e}")

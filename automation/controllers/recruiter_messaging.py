@@ -8,17 +8,17 @@ from data_access_objects.chat_dao import Chat_dao
 from collections import deque
 
 class Recruiter_messaging_controller(Chat_dao):
-    def __init__(self, driver : webdriver, new_chat_history : List[List[str]]):
+    def __init__(self, driver : webdriver, new_chat_history : Dict[str, str]):
         """
         Initialize the Recruiter_messaging_controller class.
 
         Args:
             driver (webdriver): The Selenium webdriver instance.
-            new_chat_history (List[List[str]]): The new chat history data.
+            new_chat_history (Dict[str, str]): The new chat history data.
         """
         super().__init__()
         self.driver : webdriver = driver
-        self.new_chat_history : List[List[str]] = new_chat_history
+        self.new_chat_history : Dict[str, str] = new_chat_history
         self.selectors : dict =  read_content(selectors_path)
         self.recruiter_message_lis : Deque = deque()
         self.first_message_li : object = None
@@ -60,7 +60,7 @@ class Recruiter_messaging_controller(Chat_dao):
         try:
             old_chat_history : Optional[Dict[str, Any]] = self.fetch_all()            
             str_old_chat_history : str = "\n".join(old_chat_history.values())
-            str_new_chat_history : str = "\n".join([f"{sentence[0]} - {sentence[1]}" for sentence in self.new_chat_history])
+            str_new_chat_history : str = "\n".join([f"{key} - {value}" for key, value in self.new_chat_history.items()])
             if str_old_chat_history == str_new_chat_history:
                 return True
         except Exception as e:

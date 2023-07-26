@@ -37,7 +37,6 @@ class Capcha_controller:
             logger.info(f"Captcha is not present, continue: {e}")
         return element is not None and element.text == "Verification"
 
-
     def manual_completion(self, message : str = "Press finish once you complete the CAPCHA.") -> bool: 
         """
         Prompt the user to manually complete the CAPTCHA.
