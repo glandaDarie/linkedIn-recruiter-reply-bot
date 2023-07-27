@@ -89,7 +89,6 @@ if __name__ == "__main__":
             llm : object | NotImplementedError = llm_reply_factory.create_llm()
             response : str = llm.predict(query=chat)
             deliver_controller : Deliver_controller = Deliver_controller(driver=driver, message=response)
-            # print(f"Response: {response}")
-            deliver_controller.write_message()
+            deliver_controller.write_message().send_message()
         except Exception as e:
             logger.error(f"Error with langchain implementation: {e}")
