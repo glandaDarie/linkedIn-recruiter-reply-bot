@@ -7,8 +7,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from utils.option_utils import options, linkedin_url
 from utils.file_utils import read_content, encrypted_credentials, \
     encrypt_credentials, write_encrypted_credentials
-from utils.paths_utils import linkedin_credentials_path, user_account_fullname_xpath, \
-    personal_data_path
+from utils.paths_utils import linkedin_credentials_path, user_account_fullname_xpath
 from utils.crypto_utils import decrypt_aes
 from controllers.login import Login_controller
 from controllers.message import Message_controller
@@ -18,11 +17,10 @@ from controllers.recruiter_messaging import Recruiter_messaging_controller
 from data_access_objects.chat_dao import Chat_dao
 from utils.logger_utils import logger
 from recruiter_text_replier.llm_reply_factory import LLM_Reply_factory
-from langchain.document_loaders import TextLoader
-from langchain.indexes import VectorstoreIndexCreator
+from controllers.deliver import Deliver_controller
 
 if __name__ == "__main__":
-    driver : webdriver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    driver : webdriver = webdriver.Chrome(service=Service(ChromeDriverManager("114.0.5735.90").install()), options=options)
     driver.get(linkedin_url)
     driver.maximize_window()
     if not encrypted_credentials(linkedin_credentials_path):
@@ -67,10 +65,8 @@ if __name__ == "__main__":
         recruiter_messaging_controller.add_head_message_from_messaging_inbox()
     chat_dao : Chat_dao = Chat_dao() 
     chats : List[List[List[str]]] = []    
-    personal_data_loader : TextLoader = TextLoader(personal_data_path)
-    index : VectorstoreIndexCreator = VectorstoreIndexCreator().from_loaders([personal_data_loader])
     for index, message_li in enumerate(list(recruiter_messaging_controller.recruiter_message_lis)):
-        if index == 0:
+        if index == 0: 
             chats.append(chat)
         else:
             message_li.click()
@@ -91,10 +87,9 @@ if __name__ == "__main__":
         try: 
             llm_reply_factory : LLM_Reply_factory = LLM_Reply_factory(llm_name="<open_ai>")
             llm : object | NotImplementedError = llm_reply_factory.create_llm()
-            response : str = llm.predict(
-                query=chat,
-                vector_store_index_creator=index
-            )
-            print(f"Response: {response}")
+            response : str = llm.predict(query=chat)
+            deliver_controller : Deliver_controller = Deliver_controller(driver=driver, message=response)
+            # print(f"Response: {response}")
+            deliver_controller.write_message()
         except Exception as e:
             logger.error(f"Error with langchain implementation: {e}")
